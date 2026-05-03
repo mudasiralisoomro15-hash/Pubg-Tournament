@@ -1396,11 +1396,11 @@ input, select, textarea { font-family: inherit; }
 }
 
 .whatsapp-fab {
-  position: absolute;
-  bottom: 100px;
+  position: fixed;
+  bottom: 90px;
   right: 16px;
-  width: 56px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
   background: #25D366;
   color: #fff;
   border-radius: 50%;
@@ -1408,15 +1408,16 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   justify-content: center;
   z-index: 6;
-  box-shadow: 0 8px 24px rgba(37,211,102,0.4);
+  box-shadow: 0 4px 16px rgba(37,211,102,0.4);
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
   text-decoration: none;
   animation: waPulse 2s ease-in-out infinite;
+  opacity: 0.92;
 }
 
-.whatsapp-fab:hover, .whatsapp-fab:active { transform: scale(1.08); }
-.whatsapp-fab svg { width: 28px; height: 28px; fill: #fff; }
+.whatsapp-fab:hover, .whatsapp-fab:active { transform: scale(1.08); opacity: 1; }
+.whatsapp-fab svg { width: 24px; height: 24px; fill: #fff; }
 
 @keyframes waPulse {
   0%, 100% { box-shadow: 0 8px 24px rgba(37,211,102,0.4); }
@@ -1719,11 +1720,18 @@ input, select, textarea { font-family: inherit; }
   height: 80px;
   margin: 0 auto 14px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 .avatar-upload-wrap .avatar {
-  margin: 0;
-  width: 100%;
-  height: 100%;
+  margin: 0 !important;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
 }
 .avatar-pic {
   width: 80px;
@@ -1735,8 +1743,8 @@ input, select, textarea { font-family: inherit; }
 }
 .avatar-edit-btn {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -2px;
+  right: -2px;
   width: 26px;
   height: 26px;
   background: var(--orange);
@@ -1748,6 +1756,7 @@ input, select, textarea { font-family: inherit; }
   border: 2px solid var(--bg-2);
   cursor: pointer;
   z-index: 2;
+  pointer-events: none;
 }
 .avatar-edit-btn svg { width: 12px; height: 12px; }
 
@@ -2194,8 +2203,8 @@ input, select, textarea { font-family: inherit; }
         <div class="bc-label">// AVAILABLE BALANCE</div>
         <div class="bc-amount"><span class="currency">PKR</span><span id="dashBalance">0</span></div>
         <div class="bc-actions">
-          <button class="bc-btn deposit" onclick="openModal('deposit')">＋ DEPOSIT</button>
-          <button class="bc-btn" onclick="openModal('withdraw')">↗ WITHDRAW</button>
+          <button class="bc-btn deposit" type="button" onclick="window.openModal && window.openModal('deposit')">＋ DEPOSIT</button>
+          <button class="bc-btn" type="button" onclick="window.openModal && window.openModal('withdraw')">↗ WITHDRAW</button>
         </div>
       </div>
 
@@ -2240,7 +2249,12 @@ input, select, textarea { font-family: inherit; }
     <!-- PROFILE -->
     <section class="screen" data-screen="profile">
       <div class="profile-card">
-        <div class="avatar" id="profAvatar">P</div>
+        <div class="avatar-upload-wrap" onclick="openProfilePicUpload()">
+          <div class="avatar" id="profAvatar">P</div>
+          <div class="avatar-edit-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </div>
+        </div>
         <div class="profile-name" id="profName">PLAYER</div>
         <div class="profile-id" id="profId">ID</div>
         <div class="profile-stats">
@@ -2892,6 +2906,35 @@ input, select, textarea { font-family: inherit; }
   </div>
 </div>
 
+<!-- Stylish Confirm Modal -->
+<div class="modal-overlay" id="modalConfirm" style="align-items: center;">
+  <div class="modal" style="max-width: 360px; margin: auto; border-radius: 12px; border-top: 2px solid var(--orange);">
+    <div id="confirmIcon" style="width: 60px; height: 60px; margin: 0 auto 16px; background: var(--orange); display: flex; align-items: center; justify-content: center; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);">
+      <svg viewBox="0 0 24 24" fill="#000" style="width: 30px; height: 30px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z"/></svg>
+    </div>
+    <div class="modal-tag" id="confirmTag" style="text-align: center;">// CONFIRMATION</div>
+    <div class="modal-title" id="confirmTitle" style="text-align: center; font-size: 24px; margin-bottom: 12px;">CONFIRM ACTION</div>
+    <div id="confirmMessage" style="text-align: center; color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 22px; white-space: pre-wrap; padding: 0 6px;"></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <button id="confirmCancelBtn" type="button" style="background: var(--bg-3); border: 1px solid var(--line-bright); color: var(--text); padding: 13px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1.5px; border-radius: 4px; cursor: pointer;">CANCEL</button>
+      <button id="confirmOkBtn" type="button" class="submit-btn" style="margin: 0; padding: 13px; font-size: 15px;">CONFIRM ▸</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stylish Alert Modal -->
+<div class="modal-overlay" id="modalAlert" style="align-items: center;">
+  <div class="modal" style="max-width: 360px; margin: auto; border-radius: 12px; border-top: 2px solid var(--orange);">
+    <div id="alertIcon" style="width: 60px; height: 60px; margin: 0 auto 16px; background: var(--orange); display: flex; align-items: center; justify-content: center; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);">
+      <svg viewBox="0 0 24 24" fill="#000" style="width: 30px; height: 30px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+    <div class="modal-tag" id="alertTag" style="text-align: center;">// NOTICE</div>
+    <div class="modal-title" id="alertTitle" style="text-align: center; font-size: 24px; margin-bottom: 12px;">NOTICE</div>
+    <div id="alertMessage" style="text-align: center; color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 22px; white-space: pre-wrap; padding: 0 6px;"></div>
+    <button id="alertOkBtn" type="button" class="submit-btn" style="margin: 0;">OK</button>
+  </div>
+</div>
+
 <!-- Profile Pic Upload (file input only, no UI needed) -->
 <input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="uploadProfilePic(this)" />
 
@@ -2970,6 +3013,117 @@ function toast(msg, type = 'info') {
   c.appendChild(t);
   setTimeout(() => t.remove(), 4000);
 }
+
+// === Stylish Confirm Modal (replaces browser confirm) ===
+function showConfirm(options) {
+  return new Promise((resolve) => {
+    const opts = typeof options === 'string' ? { message: options } : (options || {});
+    const title = opts.title || 'CONFIRM ACTION';
+    const message = opts.message || 'Are you sure?';
+    const tag = opts.tag || '// CONFIRMATION';
+    const okText = opts.okText || 'CONFIRM ▸';
+    const cancelText = opts.cancelText || 'CANCEL';
+    const danger = opts.danger || false;
+    const iconType = opts.iconType || (danger ? 'danger' : 'warning'); // warning, danger, info, success
+
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    document.getElementById('confirmTag').textContent = tag;
+    document.getElementById('confirmTag').style.color = danger ? 'var(--red)' : 'var(--orange)';
+    document.getElementById('confirmOkBtn').textContent = okText;
+    document.getElementById('confirmCancelBtn').textContent = cancelText;
+
+    // Style OK button based on danger
+    const okBtn = document.getElementById('confirmOkBtn');
+    if (danger) {
+      okBtn.style.background = 'var(--red)';
+      okBtn.style.color = '#fff';
+    } else {
+      okBtn.style.background = 'var(--orange)';
+      okBtn.style.color = '#000';
+    }
+
+    // Set icon
+    const iconEl = document.getElementById('confirmIcon');
+    let iconColor = 'var(--orange)';
+    let iconSvg = '<svg viewBox="0 0 24 24" fill="#000" style="width: 28px; height: 28px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z"/></svg>';
+    if (iconType === 'danger') {
+      iconColor = 'var(--red)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#fff" style="width: 28px; height: 28px;"><path d="M12 2L1 21h22L12 2zm1 14h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>';
+    } else if (iconType === 'success') {
+      iconColor = 'var(--green)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#000" style="width: 28px; height: 28px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    } else if (iconType === 'info') {
+      iconColor = 'var(--blue)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#fff" style="width: 28px; height: 28px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+    }
+    iconEl.style.background = iconColor;
+    iconEl.innerHTML = iconSvg;
+
+    // Open modal
+    document.getElementById('modalConfirm').classList.add('active');
+
+    const cleanup = () => {
+      okBtn.onclick = null;
+      document.getElementById('confirmCancelBtn').onclick = null;
+      document.getElementById('modalConfirm').classList.remove('active');
+    };
+
+    okBtn.onclick = () => { cleanup(); resolve(true); };
+    document.getElementById('confirmCancelBtn').onclick = () => { cleanup(); resolve(false); };
+  });
+}
+
+// === Stylish Alert Modal (replaces browser alert) ===
+function showAlert(options) {
+  return new Promise((resolve) => {
+    const opts = typeof options === 'string' ? { message: options } : (options || {});
+    const title = opts.title || 'NOTICE';
+    const message = opts.message || '';
+    const tag = opts.tag || '// NOTICE';
+    const okText = opts.okText || 'OK';
+    const iconType = opts.iconType || 'info';
+
+    document.getElementById('alertTitle').textContent = title;
+    document.getElementById('alertMessage').textContent = message;
+    document.getElementById('alertTag').textContent = tag;
+    document.getElementById('alertOkBtn').textContent = okText;
+
+    let tagColor = 'var(--orange)';
+    if (iconType === 'danger') tagColor = 'var(--red)';
+    if (iconType === 'success') tagColor = 'var(--green)';
+    if (iconType === 'info') tagColor = 'var(--blue)';
+    document.getElementById('alertTag').style.color = tagColor;
+
+    // Set icon
+    const iconEl = document.getElementById('alertIcon');
+    let iconColor = 'var(--orange)';
+    let iconSvg = '<svg viewBox="0 0 24 24" fill="#000" style="width: 28px; height: 28px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+    if (iconType === 'danger') {
+      iconColor = 'var(--red)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#fff" style="width: 28px; height: 28px;"><path d="M12 2L1 21h22L12 2zm1 14h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>';
+    } else if (iconType === 'success') {
+      iconColor = 'var(--green)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#000" style="width: 28px; height: 28px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    } else if (iconType === 'info') {
+      iconColor = 'var(--blue)';
+      iconSvg = '<svg viewBox="0 0 24 24" fill="#fff" style="width: 28px; height: 28px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+    }
+    iconEl.style.background = iconColor;
+    iconEl.innerHTML = iconSvg;
+
+    document.getElementById('modalAlert').classList.add('active');
+
+    document.getElementById('alertOkBtn').onclick = () => {
+      document.getElementById('modalAlert').classList.remove('active');
+      resolve(true);
+    };
+  });
+}
+
+// Make available globally
+window.showConfirm = showConfirm;
+window.showAlert = showAlert;
 
 // Pakistan phone validation
 // Accepts: 03XXXXXXXXX (11 digits), 3XXXXXXXXX (10 digits), 923XXXXXXXXX (12 digits)
@@ -3217,7 +3371,16 @@ window.completeGoogleProfile = async function() {
 };
 
 window.logout = async function() {
-  if (!confirm('Logout from your account?')) return;
+  const ok = await showConfirm({
+    title: 'LOGOUT?',
+    message: 'Are you sure you want to logout from your account?',
+    tag: '// SIGN OUT',
+    okText: 'LOGOUT',
+    cancelText: 'CANCEL',
+    iconType: 'warning',
+    danger: true
+  });
+  if (!ok) return;
   try {
     cleanupListeners();
     await signOut(auth);
@@ -3577,7 +3740,8 @@ window.closeModal = function(name) {
     addAdmin: 'modalAddAdmin',
     bulkResults: 'modalBulkResults', waShare: 'modalWaShare',
     userActions: 'modalUserActions', blockUser: 'modalBlockUser',
-    screenshot: 'modalScreenshot'
+    screenshot: 'modalScreenshot',
+    confirm: 'modalConfirm', alert: 'modalAlert'
   };
   const m = document.getElementById(map[name]);
   if (m) m.classList.remove('active');
@@ -4024,7 +4188,15 @@ window.openBulkResults = async function(matchId) {
   if (!m) return toast('Match not found', 'error');
 
   if (m.resultsDeclared) {
-    if (!confirm('Results already declared for this match. Re-declaring will create new transactions. Continue?')) return;
+    const ok = await showConfirm({
+      title: 'RE-DECLARE RESULTS?',
+      message: 'Results already declared for this match. Re-declaring will create new transactions and update balances again. Continue?',
+      tag: '// WARNING',
+      okText: 'YES, RE-DECLARE',
+      iconType: 'warning',
+      danger: true
+    });
+    if (!ok) return;
   }
 
   resultMatch = m;
@@ -4298,7 +4470,14 @@ window.distributeResults = async function(event) {
     return toast('Please select at least one winner or enter kills', 'error');
   }
 
-  if (!confirm(`Distribute prizes to ${Object.keys(userWinnings).length} players? This will update balances and stats.`)) return;
+  const okDist = await showConfirm({
+    title: 'DISTRIBUTE PRIZES?',
+    message: `Distribute prizes to ${Object.keys(userWinnings).length} players? This will update balances, stats and match history for all players.`,
+    tag: '// FINAL CONFIRMATION',
+    okText: 'YES, DISTRIBUTE',
+    iconType: 'success'
+  });
+  if (!okDist) return;
 
   if (btn) { btn.disabled = true; btn.textContent = 'DISTRIBUTING...'; }
 
@@ -4555,7 +4734,14 @@ window.confirmBlockUser = async function() {
 };
 
 window.unblockUser = async function(userId) {
-  if (!confirm('Unblock this user?')) return;
+  const ok = await showConfirm({
+    title: 'UNBLOCK USER?',
+    message: 'This user will be able to login again.',
+    tag: '// UNBLOCK',
+    okText: 'YES, UNBLOCK',
+    iconType: 'success'
+  });
+  if (!ok) return;
   try {
     await updateDoc(doc(db, 'users', userId), {
       blocked: false,
@@ -4628,7 +4814,15 @@ window.approveDeposit = async function(reqId, event) {
 
 window.rejectDeposit = async function(reqId, event) {
   const btn = event && event.target;
-  if (!confirm('Reject this deposit?')) return;
+  const ok = await showConfirm({
+    title: 'REJECT DEPOSIT?',
+    message: 'This deposit request will be marked as rejected. User will see "REJECTED" status.',
+    tag: '// REJECT REQUEST',
+    okText: 'YES, REJECT',
+    iconType: 'danger',
+    danger: true
+  });
+  if (!ok) return;
   const req = allDeposits.find(r => r.id === reqId);
   if (!req || req.status !== 'pending') return;
   if (btn) { btn.disabled = true; btn.textContent = 'PROCESSING...'; }
@@ -4653,7 +4847,14 @@ window.approveWithdraw = async function(reqId, event) {
   if ((user.balance || 0) < req.amount) {
     return toast(`User has only PKR ${fmt(user.balance)}. Cannot approve.`, 'error');
   }
-  if (!confirm(`Confirm: Have you sent PKR ${fmt(req.amount)} to ${req.userName}?`)) return;
+  const okSent = await showConfirm({
+    title: 'PAYMENT SENT?',
+    message: `Confirm that you have sent PKR ${fmt(req.amount)} to ${req.userName}. Approval will deduct this amount from their balance.`,
+    tag: '// CONFIRM PAYMENT',
+    okText: 'YES, APPROVE',
+    iconType: 'success'
+  });
+  if (!okSent) return;
   if (btn) { btn.disabled = true; btn.textContent = 'PROCESSING...'; }
   try {
     const batch = writeBatch(db);
@@ -4670,7 +4871,15 @@ window.approveWithdraw = async function(reqId, event) {
 
 window.rejectWithdraw = async function(reqId, event) {
   const btn = event && event.target;
-  if (!confirm('Reject this withdraw request?')) return;
+  const ok = await showConfirm({
+    title: 'REJECT WITHDRAW?',
+    message: 'This withdraw request will be marked as rejected. Balance was not deducted (it only deducts on approval).',
+    tag: '// REJECT REQUEST',
+    okText: 'YES, REJECT',
+    iconType: 'danger',
+    danger: true
+  });
+  if (!ok) return;
   const req = allWithdraws.find(r => r.id === reqId);
   if (!req || req.status !== 'pending') return;
   if (btn) { btn.disabled = true; btn.textContent = 'PROCESSING...'; }
@@ -5014,7 +5223,15 @@ window.editMatch = function(matchId) {
 };
 
 window.deleteMatch = async function(matchId) {
-  if (!confirm('Delete this match permanently?')) return;
+  const ok = await showConfirm({
+    title: 'DELETE MATCH?',
+    message: 'This match will be permanently deleted. Cannot be undone.',
+    tag: '// DANGER ZONE',
+    okText: 'DELETE PERMANENTLY',
+    iconType: 'danger',
+    danger: true
+  });
+  if (!ok) return;
   try {
     await deleteDoc(doc(db, 'matches', matchId));
     toast('Match deleted', 'info');
@@ -5157,7 +5374,15 @@ window.addAdminEmail = async function() {
 };
 
 window.removeAdminEmail = async function(email) {
-  if (!confirm(`Remove ${email} from admin?`)) return;
+  const ok = await showConfirm({
+    title: 'REMOVE ADMIN?',
+    message: `${email} will lose admin access.`,
+    tag: '// REVOKE ACCESS',
+    okText: 'YES, REMOVE',
+    iconType: 'danger',
+    danger: true
+  });
+  if (!ok) return;
   try {
     await updateDoc(doc(db, 'settings', 'config'), {
       admins: arrayRemove(email)
@@ -5366,30 +5591,18 @@ function renderProfile() {
   const initials = (userProfile.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
 
-  // Update avatar — support profile pic
+  // Update avatar with profile pic or initials
   const avatarEl = document.getElementById('profAvatar');
   if (avatarEl) {
-    const wrap = avatarEl.parentElement;
-    if (wrap && !wrap.classList.contains('avatar-upload-wrap')) {
-      // Upgrade to upload wrapper
-      wrap.classList.add('avatar-upload-wrap');
-      wrap.style.cursor = 'pointer';
-      wrap.onclick = () => openProfilePicUpload();
-      // Add edit button if not present
-      if (!wrap.querySelector('.avatar-edit-btn')) {
-        const editBtn = document.createElement('div');
-        editBtn.className = 'avatar-edit-btn';
-        editBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
-        wrap.appendChild(editBtn);
-      }
-    }
     if (userProfile.profilePic) {
       avatarEl.style.backgroundImage = `url('${userProfile.profilePic}')`;
       avatarEl.style.backgroundSize = 'cover';
       avatarEl.style.backgroundPosition = 'center';
+      avatarEl.style.color = 'transparent';
       avatarEl.textContent = '';
     } else {
       avatarEl.style.backgroundImage = '';
+      avatarEl.style.color = '';
       avatarEl.textContent = initials;
     }
   }
