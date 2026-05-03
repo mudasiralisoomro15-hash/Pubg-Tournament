@@ -4713,22 +4713,12 @@ window.openUserManage = function(userId) {
       ${avatarHTML}
       <div class="profile-name" style="font-size: 20px;">${u.name || '—'}</div>
       <div class="profile-id">${u.email || '—'}</div>
-          <div class="profile-stats" style="display: flex; justify-content: space-around; margin: 15px 0; text-align: center; width: 100%;">
-        <div class="ps-item" style="flex: 1;">
-            <div class="ps-num" style="display: block; font-weight: bold; font-size: 18px;">${u.matchesPlayed || 0}</div>
-            <div class="ps-label" style="display: block; font-size: 10px; color: #aaa; letter-spacing: 1px;">PLAYED</div>
-        </div>
-        <div class="ps-item" style="flex: 1;">
-            <div class="ps-num" style="display: block; font-weight: bold; font-size: 18px;">${u.totalKills || 0}</div>
-            <div class="ps-label" style="display: block; font-size: 10px; color: #aaa; letter-spacing: 1px;">KILLS</div>
-        </div>
-        <div class="ps-item" style="flex: 1;">
-            <div class="ps-num" style="display: block; font-weight: bold; font-size: 18px;">${u.totalWins || 0}</div>
-            <div class="ps-label" style="display: block; font-size: 10px; color: #aaa; letter-spacing: 1px;">EARNED</div>
-        </div>
+      <div class="profile-stats">
+        <div class="ps-item"><div class="ps-num">${u.matchesPlayed || 0}</div><div class="ps-label">PLAYED</div></div>
+        <div class="ps-item"><div class="ps-num">${u.totalKills || 0}</div><div class="ps-label">KILLS</div></div>
+        <div class="ps-item"><div class="ps-num">${u.totalWins || 0}</div><div class="ps-label">WINS</div></div>
+      </div>
     </div>
-</div>
-
 
     <div class="modal-info-box" style="background: rgba(74,222,128,0.05); border-color: var(--green); color: var(--green);">
       Current Balance: <strong style="font-size:18px;">PKR ${fmt(u.balance)}</strong>
