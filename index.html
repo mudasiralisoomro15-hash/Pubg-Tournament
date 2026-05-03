@@ -1578,6 +1578,434 @@ input, select, textarea { font-family: inherit; }
   border-radius: 3px;
 }
 
+/* === STYLISH DEPOSIT/WITHDRAW === */
+.balance-display-card {
+  background: linear-gradient(135deg, rgba(74,222,128,0.12), rgba(34,197,94,0.04)), var(--bg-3);
+  border: 1px solid var(--green);
+  padding: 18px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.balance-display-card::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  background: rgba(74,222,128,0.08);
+  border-radius: 50%;
+}
+.bdc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.bdc-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--text);
+}
+.bdc-currency {
+  font-size: 18px;
+  color: var(--green);
+  margin-right: 4px;
+}
+.bdc-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+.quick-amounts {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.qa-btn {
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  color: var(--text);
+  padding: 10px 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.qa-btn:hover, .qa-btn:active {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(255,107,26,0.08);
+}
+.qa-btn.all {
+  background: var(--orange);
+  color: #000;
+  border-color: var(--orange);
+}
+.qa-btn.all:hover {
+  background: var(--orange-light);
+}
+
+.account-display-card {
+  background: linear-gradient(135deg, rgba(255,107,26,0.10), rgba(255,179,0,0.02)), var(--bg-3);
+  border: 1px dashed var(--orange);
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 6px;
+  position: relative;
+}
+.adc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--orange);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.adc-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-word;
+  padding-right: 70px;
+}
+.adc-copy {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--orange);
+  color: #000;
+  border: none;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.adc-copy:active { transform: scale(0.95); }
+.adc-copy.copied { background: var(--green); }
+
+.upload-zone {
+  background: var(--bg);
+  border: 2px dashed var(--line-bright);
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upload-zone:hover, .upload-zone.has-file {
+  border-color: var(--orange);
+  background: rgba(255,107,26,0.04);
+}
+
+/* === PROFILE PIC UPLOAD === */
+.avatar-upload-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 14px;
+  cursor: pointer;
+}
+.avatar-upload-wrap .avatar {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+.avatar-pic {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 14px;
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--orange);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-2);
+  cursor: pointer;
+  z-index: 2;
+}
+.avatar-edit-btn svg { width: 12px; height: 12px; }
+
+/* === USER ROW WITH MENU === */
+.user-row-menu-btn {
+  background: transparent;
+  border: 1px solid var(--line-bright);
+  color: var(--text-dim);
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 6px;
+}
+.user-row-menu-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+.user-blocked-badge {
+  background: rgba(239,68,68,0.15);
+  color: var(--red);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 700;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* === ACTION SHEET (for user manage menu) === */
+.action-sheet {
+  background: var(--bg-2);
+  border-top: 2px solid var(--orange);
+  border-radius: 12px 12px 0 0;
+  padding: 14px;
+}
+.action-sheet-item {
+  padding: 14px 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+}
+.action-sheet-item:hover { background: var(--bg-3); }
+.action-sheet-item.danger { color: var(--red); }
+.action-sheet-item.warning { color: var(--amber); }
+.action-sheet-item svg { width: 18px; height: 18px; }
+
+/* === POSITION PRIZES === */
+.position-prizes-list {
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.position-prize-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 36px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.position-prize-row:last-child { border-bottom: none; }
+.pp-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--orange);
+  text-align: center;
+}
+.pp-input {
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  padding: 8px 10px;
+  color: var(--text);
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 13px;
+}
+.pp-remove {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  border-radius: 3px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.add-position-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed var(--orange);
+  color: var(--orange);
+  padding: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+.add-position-btn:hover { background: rgba(255,107,26,0.08); }
+
+/* === MODE TOGGLE === */
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  border-radius: 6px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.mode-tab {
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.mode-tab.active {
+  background: var(--orange);
+  color: #000;
+}
+
+/* === BULK RESULT ENTRY === */
+.bulk-result-search {
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  padding: 10px 12px;
+  width: 100%;
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.bulk-position-card {
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.bulk-position-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: var(--orange);
+  margin-bottom: 6px;
+}
+.bulk-player-row {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+.bulk-player-row:nth-child(even) { background: var(--bg-2); }
+.bpr-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.bpr-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+.bpr-input {
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  padding: 6px 8px;
+  color: var(--text);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-align: center;
+}
+.bulk-action-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0;
+}
+.bulk-quick-fill {
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  color: var(--text);
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-radius: 3px;
+}
+
+/* === RESULT SUMMARY === */
+.result-summary {
+  background: var(--bg);
+  border: 1px solid var(--green);
+  padding: 14px;
+  border-radius: 6px;
+  margin-top: 14px;
+}
+.result-summary h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+
+/* === WHATSAPP RESULT TEXT === */
+.whatsapp-result-box {
+  background: var(--bg);
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  padding: 14px;
+  margin: 14px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  max-height: 240px;
+  overflow-y: auto;
+  color: var(--text);
+}
+
+/* Mobile-friendly upload preview for screenshots */
+.screenshot-preview-link {
+  display: inline-block;
+  background: var(--bg-3);
+  padding: 6px 10px;
+  border: 1px solid var(--line-bright);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--orange);
+  text-decoration: none;
+  margin-top: 6px;
+}
+
 @media (max-width: 360px) {
   .quick-stats { gap: 6px; }
   .qs-num { font-size: 22px; }
@@ -2022,6 +2450,16 @@ input, select, textarea { font-family: inherit; }
       <button class="submit-btn" onclick="saveWhatsAppSettings(event)">SAVE WHATSAPP SETTINGS ▸</button>
 
       <div style="height:24px;"></div>
+      <div class="section-head-mini"><h3>FIREBASE STORAGE SETUP</h3></div>
+      <div class="modal-info-box" style="background: rgba(255,179,0,0.05); border-color: var(--amber); color: var(--amber);">
+        ⓘ <strong>One-time setup required for screenshots & profile pics:</strong><br>
+        1. Go to Firebase Console → Storage<br>
+        2. Click "Get Started" → Test Mode<br>
+        3. Click "Done"<br>
+        4. Profile pics & deposit screenshots will then work!
+      </div>
+
+      <div style="height:24px;"></div>
       <div class="section-head-mini">
         <h3>ADMIN ACCESS</h3>
         <a onclick="openModal('addAdmin')">+ ADD</a>
@@ -2089,7 +2527,7 @@ input, select, textarea { font-family: inherit; }
     <div class="modal-title">DEPOSIT FUNDS</div>
 
     <div class="modal-info-box">
-      ⚠ Pehle selected account pe paisa send karein, phir transaction ID submit karein. Admin approval ke baad balance add hoga.
+      ⓘ Send money to the account shown below, then submit transaction ID and screenshot. Balance will be added after admin approval.
     </div>
 
     <div class="field">
@@ -2110,8 +2548,13 @@ input, select, textarea { font-family: inherit; }
       </div>
     </div>
 
-    <div class="modal-info-box" style="background: rgba(74,222,128,0.05); border-color: var(--green); color: var(--green);" id="depositAccount">
-      ACCOUNT: -
+    <div class="account-display-card">
+      <div class="adc-label">SEND TO THIS ACCOUNT</div>
+      <div class="adc-value" id="depositAccountVal">Account info not set</div>
+      <button type="button" class="adc-copy" onclick="copyAccountNumber()">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px; height:14px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        COPY
+      </button>
     </div>
 
     <div class="field">
@@ -2126,6 +2569,20 @@ input, select, textarea { font-family: inherit; }
       <label>SENDER NAME</label>
       <input type="text" id="depSender" placeholder="Account holder name">
     </div>
+
+    <div class="field">
+      <label>PAYMENT SCREENSHOT (OPTIONAL)</label>
+      <div class="upload-zone" id="depScreenshotZone" onclick="document.getElementById('depScreenshot').click()">
+        <input type="file" id="depScreenshot" accept="image/*" style="display:none;" onchange="previewScreenshot(this)">
+        <div id="depUploadLabel">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:32px; height:32px; color: var(--orange); margin-bottom: 8px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1.5px;">TAP TO UPLOAD SCREENSHOT</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); margin-top: 4px;">Faster approval with screenshot</div>
+        </div>
+        <img id="depPreview" style="display:none; max-width: 100%; max-height: 200px; border-radius: 4px;" />
+      </div>
+    </div>
+
     <button class="submit-btn" onclick="submitDeposit(event)">SUBMIT REQUEST ▸</button>
   </div>
 </div>
@@ -2137,8 +2594,26 @@ input, select, textarea { font-family: inherit; }
     <div class="modal-tag">// CASH OUT</div>
     <div class="modal-title">WITHDRAW FUNDS</div>
 
-    <div class="modal-info-box">
-      Available: <strong id="withAvail">PKR 0</strong> • Min: PKR 200 • 24 hours processing
+    <div class="balance-display-card">
+      <div class="bdc-label">AVAILABLE BALANCE</div>
+      <div class="bdc-amount"><span class="bdc-currency">PKR</span><span id="withAvail">0</span></div>
+      <div class="bdc-note">No minimum • Withdraw any amount</div>
+    </div>
+
+    <div class="field">
+      <label>QUICK AMOUNTS</label>
+      <div class="quick-amounts">
+        <button type="button" class="qa-btn" onclick="setWithdrawAmount(100)">100</button>
+        <button type="button" class="qa-btn" onclick="setWithdrawAmount(500)">500</button>
+        <button type="button" class="qa-btn" onclick="setWithdrawAmount(1000)">1K</button>
+        <button type="button" class="qa-btn" onclick="setWithdrawAmount(5000)">5K</button>
+        <button type="button" class="qa-btn all" onclick="setWithdrawAmount('all')">ALL</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>AMOUNT (PKR)</label>
+      <input type="number" id="witAmount" placeholder="Enter amount" inputmode="numeric">
     </div>
 
     <div class="field">
@@ -2160,10 +2635,6 @@ input, select, textarea { font-family: inherit; }
     </div>
 
     <div class="field">
-      <label>AMOUNT (PKR)</label>
-      <input type="number" id="witAmount" placeholder="Min 200" min="200" inputmode="numeric">
-    </div>
-    <div class="field">
       <label>ACCOUNT NUMBER</label>
       <input type="text" id="witAccount" placeholder="03XXXXXXXXX or IBAN">
     </div>
@@ -2171,6 +2642,11 @@ input, select, textarea { font-family: inherit; }
       <label>ACCOUNT HOLDER NAME</label>
       <input type="text" id="witName" placeholder="Full name on account">
     </div>
+
+    <div class="modal-info-box">
+      ⓘ Balance will be deducted only after admin approval. Processing time: up to 24 hours.
+    </div>
+
     <button class="submit-btn" onclick="submitWithdraw(event)">SUBMIT REQUEST ▸</button>
   </div>
 </div>
@@ -2269,20 +2745,48 @@ input, select, textarea { font-family: inherit; }
         <input type="number" id="amEntry" placeholder="150" inputmode="numeric">
       </div>
       <div class="field">
-        <label>PER KILL (PKR)</label>
-        <input type="number" id="amKill" placeholder="70" inputmode="numeric">
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>WINNING PRIZE</label>
-        <input type="text" id="amPrize" placeholder="1000 UC or 10000">
-      </div>
-      <div class="field">
         <label>TOTAL SLOTS</label>
         <input type="number" id="amSlots" placeholder="100" inputmode="numeric">
       </div>
     </div>
+
+    <div style="margin-top:14px; margin-bottom:8px;">
+      <label style="display:block; font-family:'JetBrains Mono', monospace; font-size:10px; color: var(--text-muted); letter-spacing:1.5px; margin-bottom:6px;">PRIZE MODE</label>
+      <div class="mode-toggle">
+        <div class="mode-tab active" data-pmode="perKill" onclick="switchPrizeMode('perKill')">PER KILL MODE</div>
+        <div class="mode-tab" data-pmode="position" onclick="switchPrizeMode('position')">POSITION-BASED</div>
+      </div>
+    </div>
+
+    <!-- PER KILL MODE FIELDS -->
+    <div id="perKillFields">
+      <div class="field-row">
+        <div class="field">
+          <label>PER KILL (PKR)</label>
+          <input type="number" id="amKill" placeholder="70" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label>WINNER PRIZE (#1)</label>
+          <input type="text" id="amPrize" placeholder="5000">
+        </div>
+      </div>
+      <div class="field-help" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">
+        ⓘ Per kill amount sab ko milega (kills × per kill). Winner ko extra prize milega.
+      </div>
+    </div>
+
+    <!-- POSITION-BASED MODE FIELDS -->
+    <div id="positionFields" style="display:none;">
+      <label style="display:block; font-family:'JetBrains Mono', monospace; font-size:10px; color: var(--text-muted); letter-spacing:1.5px; margin-bottom:6px;">POSITION PRIZES</label>
+      <div class="position-prizes-list" id="positionPrizesList">
+        <!-- Will be populated dynamically -->
+      </div>
+      <button type="button" class="add-position-btn" onclick="addPositionPrize()">+ ADD POSITION</button>
+      <div class="field-help" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">
+        ⓘ Sirf in positions ko prize milega. Per kill nahi milega.
+      </div>
+    </div>
+
     <div class="field">
       <label>SLOTS FILLED (manual override)</label>
       <input type="number" id="amFilled" placeholder="0" inputmode="numeric" min="0">
@@ -2345,6 +2849,52 @@ input, select, textarea { font-family: inherit; }
   </div>
 </div>
 
+<!-- Bulk Results Modal -->
+<div class="modal-overlay" id="modalBulkResults">
+  <div class="modal" id="bulkResultsContent" style="max-height: 95vh;"></div>
+</div>
+
+<!-- WhatsApp Result Share -->
+<div class="modal-overlay" id="modalWaShare">
+  <div class="modal" id="waShareContent"></div>
+</div>
+
+<!-- User Action Sheet (3-dots menu) -->
+<div class="modal-overlay" id="modalUserActions">
+  <div class="modal action-sheet" id="userActionsContent"></div>
+</div>
+
+<!-- Block User Confirmation -->
+<div class="modal-overlay" id="modalBlockUser">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('blockUser')">✕</button>
+    <div class="modal-tag" style="color: var(--red);">// DANGER ZONE</div>
+    <div class="modal-title" id="blockUserTitle">BLOCK USER</div>
+    <div class="modal-info-box" style="background: rgba(239,68,68,0.05); border-color: var(--red); color: var(--red);">
+      ⚠ Blocked user app mein login nahi kar sake ga. Ye action reversible hai (Unblock kar sakte hain).
+    </div>
+    <div class="field">
+      <label>REASON FOR BLOCK</label>
+      <textarea id="blockReason" rows="3" placeholder="e.g. Cheating in matches, abusive behavior..."></textarea>
+    </div>
+    <div class="field-row">
+      <button class="submit-btn" style="background: var(--bg-3); border: 1px solid var(--line-bright); color: var(--text);" onclick="closeModal('blockUser')">CANCEL</button>
+      <button class="submit-btn" style="background: var(--red); color: #fff;" onclick="confirmBlockUser()">CONFIRM BLOCK ▸</button>
+    </div>
+  </div>
+</div>
+
+<!-- Screenshot View Modal -->
+<div class="modal-overlay" id="modalScreenshot">
+  <div class="modal" style="background: #000; padding: 8px;">
+    <button class="modal-close" onclick="closeModal('screenshot')">✕</button>
+    <img id="screenshotImg" style="width: 100%; border-radius: 6px; max-height: 80vh; object-fit: contain;" />
+  </div>
+</div>
+
+<!-- Profile Pic Upload (file input only, no UI needed) -->
+<input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="uploadProfilePic(this)" />
+
 <!-- Firebase SDK + App Logic -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -2359,6 +2909,9 @@ import {
   serverTimestamp, increment, arrayUnion, arrayRemove,
   writeBatch, getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 // ============= FIREBASE CONFIG =============
 const firebaseConfig = {
@@ -2374,6 +2927,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 // Default admin email (always admin)
@@ -2708,6 +3262,22 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     userProfile = snap.data();
+
+    // Check if user is blocked
+    if (userProfile.blocked === true) {
+      const reason = userProfile.blockReason || 'Contact admin for details';
+      cleanupListeners();
+      await signOut(auth);
+      currentUser = null;
+      userProfile = null;
+      showAuthScreen();
+      document.getElementById('loader').classList.add('hidden');
+      setTimeout(() => {
+        toast(`Your account has been blocked. Reason: ${reason}`, 'error');
+      }, 500);
+      return;
+    }
+
     hideAuthScreen();
     setupListeners();
     setupBrandTap();
@@ -2727,9 +3297,18 @@ function setupListeners() {
   if (!currentUser) return;
 
   // Listen to current user's profile
-  const userUnsub = onSnapshot(doc(db, 'users', currentUser.uid), (snap) => {
+  const userUnsub = onSnapshot(doc(db, 'users', currentUser.uid), async (snap) => {
     if (snap.exists()) {
-      userProfile = snap.data();
+      const data = snap.data();
+      // Live block check - sign out if blocked while logged in
+      if (data.blocked === true && !isAdmin) {
+        const reason = data.blockReason || 'Contact admin for details';
+        cleanupListeners();
+        await signOut(auth);
+        toast(`Your account has been blocked. Reason: ${reason}`, 'error');
+        return;
+      }
+      userProfile = data;
       renderHeader();
       renderDashboard();
       renderProfile();
@@ -2961,7 +3540,7 @@ window.openModal = function(name) {
     updateDepositAccountDisplay();
     document.getElementById('modalDeposit').classList.add('active');
   } else if (name === 'withdraw') {
-    document.getElementById('withAvail').textContent = 'PKR ' + fmt(userProfile?.balance || 0);
+    document.getElementById('withAvail').textContent = fmt(userProfile?.balance || 0);
     document.getElementById('modalWithdraw').classList.add('active');
   } else if (name === 'adminLogin') {
     document.getElementById('admPass').value = '';
@@ -2979,6 +3558,9 @@ window.openModal = function(name) {
       const e = document.getElementById(id);
       if (e) e.value = '';
     });
+    // Reset pricing mode to default
+    positionPrizes = [];
+    if (typeof switchPrizeMode === 'function') switchPrizeMode('perKill');
     document.getElementById('modalAddMatch').classList.add('active');
   } else if (name === 'addAdmin') {
     document.getElementById('newAdminEmail').value = '';
@@ -2992,7 +3574,10 @@ window.closeModal = function(name) {
     adminLogin: 'modalAdminLogin', editProfile: 'modalEditProfile',
     addMatch: 'modalAddMatch', match: 'modalMatch',
     userManage: 'modalUserManage', joined: 'modalJoined',
-    addAdmin: 'modalAddAdmin'
+    addAdmin: 'modalAddAdmin',
+    bulkResults: 'modalBulkResults', waShare: 'modalWaShare',
+    userActions: 'modalUserActions', blockUser: 'modalBlockUser',
+    screenshot: 'modalScreenshot'
   };
   const m = document.getElementById(map[name]);
   if (m) m.classList.remove('active');
@@ -3028,17 +3613,65 @@ window.selectWMethod = function(el) {
 function updateDepositAccountDisplay() {
   const acc = paymentSettings[selectedMethod] || '';
   const name = paymentSettings[selectedMethod + 'Name'] || '';
-  const el = document.getElementById('depositAccount');
+  const el = document.getElementById('depositAccountVal');
   if (el) {
     if (acc || name) {
-      el.innerHTML = `<div style="font-size:12px; opacity:0.7; margin-bottom:4px;">SEND TO:</div>
-        <div style="font-weight:700; font-size:15px; margin-bottom:2px;">${acc || 'Not set'}</div>
-        ${name ? `<div style="font-size:12px; opacity:0.85;">Account Name: <strong>${name}</strong></div>` : ''}`;
+      el.innerHTML = `<div style="font-size:16px; margin-bottom:4px;">${acc || 'Not set'}</div>
+        ${name ? `<div style="font-size:11px; color: var(--text-dim);">Account Name: <strong style="color:var(--text);">${name}</strong></div>` : ''}`;
     } else {
-      el.textContent = 'Account info not set yet. Contact admin.';
+      el.textContent = 'Account info not set. Contact admin.';
     }
   }
 }
+
+window.copyAccountNumber = async function() {
+  const acc = paymentSettings[selectedMethod] || '';
+  if (!acc) return toast('No account to copy', 'error');
+  try {
+    await navigator.clipboard.writeText(acc);
+    const btn = document.querySelector('.adc-copy');
+    if (btn) {
+      const originalHTML = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:14px; height:14px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> COPIED';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = originalHTML;
+      }, 2000);
+    }
+    toast('Account number copied to clipboard!', 'success');
+  } catch (err) {
+    toast('Could not copy. Please copy manually.', 'error');
+  }
+};
+
+window.previewScreenshot = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    toast('Image too large. Max 5MB.', 'error');
+    input.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('depPreview').src = e.target.result;
+    document.getElementById('depPreview').style.display = 'block';
+    document.getElementById('depUploadLabel').style.display = 'none';
+    document.getElementById('depScreenshotZone').classList.add('has-file');
+  };
+  reader.readAsDataURL(file);
+};
+
+window.setWithdrawAmount = function(val) {
+  const balance = userProfile?.balance || 0;
+  const input = document.getElementById('witAmount');
+  if (val === 'all') {
+    input.value = balance;
+  } else {
+    input.value = Math.min(val, balance);
+  }
+};
 
 // ============= DEPOSIT FLOW =============
 window.submitDeposit = async function(event) {
@@ -3046,6 +3679,8 @@ window.submitDeposit = async function(event) {
   const amount = parseInt(document.getElementById('depAmount').value);
   const txn = document.getElementById('depTxn').value.trim();
   const sender = document.getElementById('depSender').value.trim();
+  const screenshotInput = document.getElementById('depScreenshot');
+  const file = screenshotInput.files[0];
 
   if (!amount || amount < 100) return toast('Minimum deposit is PKR 100', 'error');
   if (!txn) return toast('Please enter Transaction ID', 'error');
@@ -3054,6 +3689,22 @@ window.submitDeposit = async function(event) {
   if (btn) { btn.disabled = true; btn.textContent = 'SUBMITTING...'; }
 
   try {
+    let screenshotUrl = '';
+    if (file) {
+      if (btn) btn.textContent = 'UPLOADING IMAGE...';
+      try {
+        const path = `deposits/${currentUser.uid}/${Date.now()}_${file.name}`;
+        const ref = storageRef(storage, path);
+        const snap = await uploadBytes(ref, file);
+        screenshotUrl = await getDownloadURL(snap.ref);
+      } catch (uploadErr) {
+        console.error('Upload error:', uploadErr);
+        // Continue without screenshot if upload fails
+        toast('Screenshot upload failed but request will still be submitted', 'info');
+      }
+    }
+
+    if (btn) btn.textContent = 'SUBMITTING...';
     const reqId = genId('DEP');
     await setDoc(doc(db, 'depositRequests', reqId), {
       id: reqId,
@@ -3064,6 +3715,7 @@ window.submitDeposit = async function(event) {
       method: selectedMethod,
       txnId: txn,
       sender: sender,
+      screenshotUrl: screenshotUrl,
       status: 'pending',
       createdAt: serverTimestamp(),
       date: new Date().toISOString()
@@ -3080,6 +3732,10 @@ window.submitDeposit = async function(event) {
     });
 
     ['depAmount','depTxn','depSender'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('depScreenshot').value = '';
+    document.getElementById('depPreview').style.display = 'none';
+    document.getElementById('depUploadLabel').style.display = 'block';
+    document.getElementById('depScreenshotZone').classList.remove('has-file');
     closeModal('deposit');
     toast('Deposit request submitted! Awaiting admin approval.', 'success');
   } catch (err) {
@@ -3096,7 +3752,7 @@ window.submitWithdraw = async function(event) {
   const account = document.getElementById('witAccount').value.trim();
   const name = document.getElementById('witName').value.trim();
 
-  if (!amount || amount < 200) return toast('Minimum withdrawal is PKR 200', 'error');
+  if (!amount || amount <= 0) return toast('Please enter a valid amount', 'error');
   if (amount > (userProfile?.balance || 0)) return toast('Insufficient balance!', 'error');
   if (!account) return toast('Please enter account number', 'error');
   if (!name) return toast('Please enter account holder name', 'error');
@@ -3198,17 +3854,40 @@ window.showMatchDetail = function(matchId) {
   }
 
   // Default match detail view
+  const isPosition = m.prizeMode === 'position';
+  const positionsList = isPosition && Array.isArray(m.positionPrizes) ? m.positionPrizes : [];
+
   document.getElementById('matchModalContent').innerHTML = `
     <button class="modal-close" onclick="closeModal('match')">✕</button>
-    <div class="modal-tag">// MATCH ID: ${m.id}</div>
+    <div class="modal-tag">// MATCH ID: ${m.id} • ${isPosition ? 'POSITION-BASED' : 'PER KILL'} MODE</div>
     <div class="modal-title">${m.name}</div>
-    <div class="detail-prize">
-      <div class="detail-prize-amt">${m.prize}</div>
-      <div class="detail-prize-label">WINNING PRIZE</div>
-    </div>
+
+    ${isPosition && positionsList.length > 0 ? `
+      <div style="background: linear-gradient(135deg, rgba(255,107,26,0.18), transparent); border: 1px solid var(--orange); padding: 14px; margin-bottom: 14px; border-radius: 6px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 2px; margin-bottom: 10px; text-align: center;">// PRIZE DISTRIBUTION</div>
+        ${positionsList.map(p => `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line-bright);">
+            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px;">
+              ${p.rank === 1 ? '🥇' : p.rank === 2 ? '🥈' : p.rank === 3 ? '🥉' : '🏆'} POSITION #${p.rank}
+            </span>
+            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange);">PKR ${fmt(p.prize)}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : `
+      <div class="detail-prize">
+        <div class="detail-prize-amt">${m.prize || '0'}</div>
+        <div class="detail-prize-label">WINNING PRIZE (#1)</div>
+      </div>
+    `}
+
     <div class="detail-grid">
       <div class="info-row"><div class="info-label">ENTRY FEE</div><div class="info-value" style="color: var(--orange);">PKR ${m.entry}</div></div>
-      <div class="info-row"><div class="info-label">PER KILL</div><div class="info-value" style="color: var(--green);">PKR ${m.perKill}</div></div>
+      ${!isPosition ? `
+        <div class="info-row"><div class="info-label">PER KILL</div><div class="info-value" style="color: var(--green);">PKR ${m.perKill || 0}</div></div>
+      ` : `
+        <div class="info-row"><div class="info-label">PER KILL</div><div class="info-value" style="color: var(--text-muted);">No</div></div>
+      `}
       <div class="info-row"><div class="info-label">FORMAT</div><div class="info-value">${m.format}</div></div>
       <div class="info-row"><div class="info-label">MAP</div><div class="info-value">${m.map}</div></div>
       <div class="info-row"><div class="info-label">SLOTS</div><div class="info-value">${m.filled || 0}/${m.slots}</div></div>
@@ -3333,6 +4012,600 @@ function showJoinedSuccess(m) {
   document.getElementById('modalJoined').classList.add('active');
 }
 
+// ============= BULK RESULT ENTRY =============
+let resultMatch = null;
+let resultJoinedPlayers = [];
+let resultPositions = {}; // {1: userId, 2: userId, 3: userId}
+let resultKills = {}; // {userId: number}
+let resultSearchTerm = '';
+
+window.openBulkResults = async function(matchId) {
+  const m = allMatches.find(x => x.id === matchId);
+  if (!m) return toast('Match not found', 'error');
+
+  if (m.resultsDeclared) {
+    if (!confirm('Results already declared for this match. Re-declaring will create new transactions. Continue?')) return;
+  }
+
+  resultMatch = m;
+  resultPositions = {};
+  resultKills = {};
+  resultSearchTerm = '';
+
+  // Find all users who joined this match
+  resultJoinedPlayers = allUsers.filter(u => (u.joinedMatches || []).includes(m.id));
+
+  if (resultJoinedPlayers.length === 0) {
+    return toast('No players joined this match yet', 'error');
+  }
+
+  renderBulkResultsModal();
+  closeAllModals();
+  document.getElementById('modalBulkResults').classList.add('active');
+};
+
+function renderBulkResultsModal() {
+  const m = resultMatch;
+  const isPosition = m.prizeMode === 'position';
+  const positions = isPosition ? (m.positionPrizes || []) : [{ rank: 1, prize: parseInt(m.prize) || 0 }];
+
+  // Filter players by search
+  const filtered = resultSearchTerm
+    ? resultJoinedPlayers.filter(p =>
+        (p.name || '').toLowerCase().includes(resultSearchTerm.toLowerCase()) ||
+        (p.email || '').toLowerCase().includes(resultSearchTerm.toLowerCase()) ||
+        (p.pubg_id || '').includes(resultSearchTerm)
+      )
+    : resultJoinedPlayers;
+
+  document.getElementById('bulkResultsContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal('bulkResults')">✕</button>
+    <div class="modal-tag" style="color: var(--red);">// DECLARE RESULTS</div>
+    <div class="modal-title" style="font-size: 24px;">${m.name}</div>
+    <div style="color: var(--text-dim); font-size: 12px; margin-bottom: 14px;">
+      ${resultJoinedPlayers.length} players • ${isPosition ? 'POSITION-BASED' : 'PER KILL'} mode
+    </div>
+
+    <div style="margin-top: 14px;"><div class="modal-tag" style="color: var(--orange);">// SELECT WINNERS</div></div>
+
+    ${positions.map(pos => `
+      <div class="bulk-position-card">
+        <div class="bulk-position-label">🏆 POSITION #${pos.rank} → PKR ${fmt(pos.prize)}</div>
+        <select class="pp-input" style="width:100%;" onchange="setResultPosition(${pos.rank}, this.value)">
+          <option value="">-- Select Player --</option>
+          ${resultJoinedPlayers.map(p => `
+            <option value="${p.id}" ${resultPositions[pos.rank] === p.id ? 'selected' : ''}>
+              ${p.name} (${p.pubg_id || 'no PUBG ID'})
+            </option>
+          `).join('')}
+        </select>
+      </div>
+    `).join('')}
+
+    ${!isPosition ? `
+      <div style="margin-top: 18px;"><div class="modal-tag">// ENTER KILLS FOR ALL PLAYERS</div></div>
+
+      <input type="text" class="bulk-result-search" placeholder="🔍 Search player by name, email, or PUBG ID..."
+             value="${resultSearchTerm}"
+             oninput="updateResultSearch(this.value)" />
+
+      <div class="bulk-action-bar">
+        <button class="bulk-quick-fill" onclick="quickFillKills(0)">FILL ALL: 0 KILLS</button>
+        <button class="bulk-quick-fill" onclick="clearKills()">CLEAR ALL KILLS</button>
+      </div>
+
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); margin-bottom: 8px;">
+        PER KILL: PKR ${m.perKill || 0} • Showing ${filtered.length} of ${resultJoinedPlayers.length} players
+      </div>
+
+      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--line-bright); border-radius: 4px;">
+        ${filtered.length === 0 ? `
+          <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">No players found</div>
+        ` : filtered.map(p => `
+          <div class="bulk-player-row">
+            <div>
+              <div class="bpr-name">${p.name}</div>
+              <div class="bpr-id">${p.pubg_id || '—'} • ${p.email}</div>
+            </div>
+            <input type="number" class="bpr-input" min="0" value="${resultKills[p.id] || ''}"
+                   placeholder="0"
+                   inputmode="numeric"
+                   onchange="setPlayerKills('${p.id}', this.value)" />
+          </div>
+        `).join('')}
+      </div>
+    ` : `
+      <div class="modal-info-box" style="margin-top: 14px;">
+        ⓘ This is a POSITION-BASED match. Per kill earnings are 0. Only selected positions will receive prizes.
+      </div>
+    `}
+
+    <div class="result-summary">
+      <h4>📊 PREVIEW</h4>
+      <div id="resultPreview"></div>
+    </div>
+
+    <button class="submit-btn" style="margin-top: 14px;" onclick="distributeResults(event)">✓ CALCULATE & DISTRIBUTE TO ALL ▸</button>
+  `;
+  updateResultPreview();
+}
+
+window.updateResultSearch = function(val) {
+  resultSearchTerm = val;
+  // Only re-render the player list section, not entire modal
+  // For simplicity, re-render the whole thing but preserve focus
+  const focused = document.activeElement;
+  const focusedId = focused ? focused.dataset.playerId : null;
+  renderBulkResultsModal();
+  // Restore search focus
+  const newSearch = document.querySelector('.bulk-result-search');
+  if (newSearch) {
+    newSearch.focus();
+    newSearch.setSelectionRange(val.length, val.length);
+  }
+};
+
+window.setResultPosition = function(rank, userId) {
+  if (userId) {
+    // Remove this user from any other position they might be in
+    Object.keys(resultPositions).forEach(r => {
+      if (resultPositions[r] === userId && parseInt(r) !== rank) {
+        delete resultPositions[r];
+      }
+    });
+    resultPositions[rank] = userId;
+  } else {
+    delete resultPositions[rank];
+  }
+  updateResultPreview();
+};
+
+window.setPlayerKills = function(userId, kills) {
+  const k = parseInt(kills) || 0;
+  if (k > 0) resultKills[userId] = k;
+  else delete resultKills[userId];
+  updateResultPreview();
+};
+
+window.quickFillKills = function(value) {
+  resultJoinedPlayers.forEach(p => {
+    if (value > 0) resultKills[p.id] = value;
+    else delete resultKills[p.id];
+  });
+  renderBulkResultsModal();
+};
+
+window.clearKills = function() {
+  resultKills = {};
+  renderBulkResultsModal();
+};
+
+function updateResultPreview() {
+  const m = resultMatch;
+  const isPosition = m.prizeMode === 'position';
+  const positions = isPosition ? (m.positionPrizes || []) : [];
+  const perKill = isPosition ? 0 : (m.perKill || 0);
+  const winnerPrize = isPosition ? 0 : (parseInt(m.prize) || 0);
+
+  let total = 0;
+  const winners = {}; // userId -> {position, kills, earnings}
+
+  // Calculate position prizes
+  if (isPosition) {
+    positions.forEach(pos => {
+      const userId = resultPositions[pos.rank];
+      if (userId) {
+        winners[userId] = winners[userId] || { kills: 0, earnings: 0 };
+        winners[userId].position = pos.rank;
+        winners[userId].earnings += pos.prize;
+        total += pos.prize;
+      }
+    });
+  } else {
+    // Per kill mode
+    const winnerId = resultPositions[1];
+    if (winnerId) {
+      winners[winnerId] = winners[winnerId] || { kills: 0, earnings: 0 };
+      winners[winnerId].position = 1;
+      winners[winnerId].earnings += winnerPrize;
+      total += winnerPrize;
+    }
+    // Add per kill earnings
+    Object.keys(resultKills).forEach(userId => {
+      const kills = resultKills[userId];
+      const earned = kills * perKill;
+      winners[userId] = winners[userId] || { kills: 0, earnings: 0 };
+      winners[userId].kills = kills;
+      winners[userId].earnings += earned;
+      total += earned;
+    });
+  }
+
+  const winnersList = Object.keys(winners).map(uid => {
+    const u = resultJoinedPlayers.find(p => p.id === uid);
+    return { ...winners[uid], userId: uid, name: u ? u.name : 'Unknown' };
+  }).sort((a, b) => (a.position || 999) - (b.position || 999) || (b.earnings - a.earnings));
+
+  const el = document.getElementById('resultPreview');
+  if (!el) return;
+
+  if (winnersList.length === 0) {
+    el.innerHTML = '<div style="font-size: 12px; color: var(--text-muted);">Select positions and/or enter kills to see preview</div>';
+    return;
+  }
+
+  el.innerHTML = `
+    <div style="font-size: 11px; line-height: 1.8;">
+      ${winnersList.slice(0, 10).map(w => `
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+          <span>${w.position ? `🏆 #${w.position}` : '👤'} ${w.name} ${w.kills > 0 ? `(${w.kills} kills)` : ''}</span>
+          <span style="color: var(--green); font-weight: 700;">+PKR ${fmt(w.earnings)}</span>
+        </div>
+      `).join('')}
+      ${winnersList.length > 10 ? `<div style="color: var(--text-muted); font-size: 10px; margin-top: 6px;">... and ${winnersList.length - 10} more</div>` : ''}
+      <div style="border-top: 1px dashed var(--line-bright); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-weight: 700;">
+        <span>TOTAL DISTRIBUTION:</span>
+        <span style="color: var(--orange);">PKR ${fmt(total)}</span>
+      </div>
+    </div>
+  `;
+}
+
+window.distributeResults = async function(event) {
+  const btn = event && event.target;
+  const m = resultMatch;
+  const isPosition = m.prizeMode === 'position';
+  const positions = isPosition ? (m.positionPrizes || []) : [];
+  const perKill = isPosition ? 0 : (m.perKill || 0);
+  const winnerPrize = isPosition ? 0 : (parseInt(m.prize) || 0);
+
+  // Build participation list (everyone joined)
+  const allPlayerIds = resultJoinedPlayers.map(p => p.id);
+
+  // Collect winnings per user
+  const userWinnings = {}; // userId -> {kills, position, earnings}
+  allPlayerIds.forEach(uid => {
+    userWinnings[uid] = { kills: 0, position: null, earnings: 0 };
+  });
+
+  if (isPosition) {
+    positions.forEach(pos => {
+      const userId = resultPositions[pos.rank];
+      if (userId && userWinnings[userId]) {
+        userWinnings[userId].position = pos.rank;
+        userWinnings[userId].earnings += pos.prize;
+      }
+    });
+  } else {
+    // Per kill mode
+    const winnerId = resultPositions[1];
+    if (winnerId && userWinnings[winnerId]) {
+      userWinnings[winnerId].position = 1;
+      userWinnings[winnerId].earnings += winnerPrize;
+    }
+    Object.keys(resultKills).forEach(uid => {
+      if (userWinnings[uid]) {
+        const kills = resultKills[uid];
+        userWinnings[uid].kills = kills;
+        userWinnings[uid].earnings += kills * perKill;
+      }
+    });
+  }
+
+  // Check there's at least something to distribute
+  const hasResults = Object.values(userWinnings).some(w => w.position || w.kills > 0 || w.earnings > 0);
+  if (!hasResults) {
+    return toast('Please select at least one winner or enter kills', 'error');
+  }
+
+  if (!confirm(`Distribute prizes to ${Object.keys(userWinnings).length} players? This will update balances and stats.`)) return;
+
+  if (btn) { btn.disabled = true; btn.textContent = 'DISTRIBUTING...'; }
+
+  try {
+    // Use multiple batches if more than 400 ops
+    let batch = writeBatch(db);
+    let opCount = 0;
+    const batches = [batch];
+
+    for (const uid of allPlayerIds) {
+      const w = userWinnings[uid];
+
+      // Update user document - matchesPlayed always +1
+      const userRef = doc(db, 'users', uid);
+      batch.update(userRef, {
+        matchesPlayed: increment(1),
+        totalKills: increment(w.kills || 0),
+        totalWins: increment(w.position === 1 ? 1 : 0),
+        balance: increment(w.earnings || 0),
+        totalEarned: increment(w.earnings || 0)
+      });
+      opCount++;
+
+      // Match history entry
+      const mhId = genId('MH');
+      batch.set(doc(db, 'users', uid, 'matchHistory', mhId), {
+        id: mhId,
+        matchId: m.id,
+        matchName: m.name,
+        kills: w.kills || 0,
+        position: w.position || 0,
+        winnings: w.earnings || 0,
+        createdAt: serverTimestamp(),
+        date: new Date().toISOString()
+      });
+      opCount++;
+
+      // Transaction (only if earned something)
+      if (w.earnings > 0) {
+        const txId = genId('MW');
+        const note = [];
+        if (w.position) note.push(`Position #${w.position}`);
+        if (w.kills > 0) note.push(`${w.kills} kills`);
+        batch.set(doc(db, 'users', uid, 'transactions', txId), {
+          id: txId,
+          type: 'match-win',
+          matchName: m.name,
+          matchId: m.id,
+          amount: w.earnings,
+          note: note.join(' • '),
+          status: 'completed',
+          createdAt: serverTimestamp(),
+          date: new Date().toISOString()
+        });
+        opCount++;
+      }
+
+      // Start new batch if approaching 500 op limit
+      if (opCount >= 400) {
+        batch = writeBatch(db);
+        batches.push(batch);
+        opCount = 0;
+      }
+    }
+
+    // Mark match as results declared
+    batch.update(doc(db, 'matches', m.id), {
+      resultsDeclared: true,
+      resultsDeclaredAt: serverTimestamp(),
+      status: 'completed'
+    });
+
+    // Commit all batches
+    for (const b of batches) {
+      await b.commit();
+    }
+
+    closeModal('bulkResults');
+    toast(`Results distributed to ${allPlayerIds.length} players!`, 'success');
+
+    // Show WhatsApp share modal
+    showWaShareModal(m, userWinnings);
+  } catch (err) {
+    console.error(err);
+    toast('Error: ' + (err.message || 'Distribution failed'), 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '✓ CALCULATE & DISTRIBUTE TO ALL ▸'; }
+  }
+};
+
+function showWaShareModal(match, userWinnings) {
+  const isPosition = match.prizeMode === 'position';
+  const positions = isPosition ? (match.positionPrizes || []) : [{ rank: 1, prize: parseInt(match.prize) || 0 }];
+
+  // Build winners list
+  const winners = Object.keys(userWinnings)
+    .map(uid => {
+      const u = resultJoinedPlayers.find(p => p.id === uid);
+      return { ...userWinnings[uid], userId: uid, name: u ? u.name : 'Unknown' };
+    })
+    .filter(w => w.earnings > 0)
+    .sort((a, b) => (a.position || 999) - (b.position || 999) || (b.earnings - a.earnings));
+
+  const totalDist = winners.reduce((sum, w) => sum + w.earnings, 0);
+
+  const trophy = ['🥇', '🥈', '🥉'];
+  let waText = `🏆 *${match.name}* - RESULTS\n\n`;
+
+  winners.forEach((w, i) => {
+    const icon = w.position && w.position <= 3 ? trophy[w.position - 1] : '🎮';
+    const posText = w.position ? `Position #${w.position}` : '';
+    const killText = w.kills > 0 ? `${w.kills} kills` : '';
+    const meta = [posText, killText].filter(Boolean).join(' | ');
+    waText += `${icon} *${w.name}*\n`;
+    if (meta) waText += `   ${meta}\n`;
+    waText += `   Won: PKR ${w.earnings.toLocaleString()}\n\n`;
+  });
+
+  waText += `━━━━━━━━━━━━━━━\n`;
+  waText += `Total Distributed: *PKR ${totalDist.toLocaleString()}*\n`;
+  waText += `Players: ${Object.keys(userWinnings).length}\n\n`;
+  waText += `_Powered by BATTLEGROUNDS PK_`;
+
+  document.getElementById('waShareContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal('waShare')">✕</button>
+    <div style="text-align: center; padding-bottom: 14px;">
+      <div style="width: 64px; height: 64px; margin: 0 auto 12px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 24 24" fill="#000" style="width: 36px; height: 36px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <div class="modal-tag" style="color: var(--green);">// SUCCESS</div>
+      <div class="modal-title">RESULTS SHARED!</div>
+    </div>
+
+    <div class="modal-info-box" style="background: rgba(74,222,128,0.05); border-color: var(--green); color: var(--green);">
+      ✓ All player balances updated<br>
+      ✓ Match history recorded<br>
+      ✓ Stats (Played/Kills/Earned) updated automatically
+    </div>
+
+    <div style="margin-top: 14px;"><div class="modal-tag">// COPY FOR WHATSAPP GROUP</div></div>
+
+    <div class="whatsapp-result-box" id="waResultText">${waText.replace(/</g, '&lt;')}</div>
+
+    <button class="submit-btn" style="background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;" onclick="copyWaText()">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+      COPY RESULT TEXT
+    </button>
+
+    ${groupLink ? `
+      <a href="${groupLink}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="submit-btn" style="background: #128C7E; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          📲 OPEN WHATSAPP GROUP
+        </button>
+      </a>
+    ` : ''}
+  `;
+  // Store text for copy
+  window._waText = waText;
+  closeAllModals();
+  document.getElementById('modalWaShare').classList.add('active');
+}
+
+window.copyWaText = async function() {
+  try {
+    await navigator.clipboard.writeText(window._waText);
+    toast('Copied! Now paste in WhatsApp group', 'success');
+  } catch (err) {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = window._waText;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      toast('Copied!', 'success');
+    } catch (e) {
+      toast('Could not copy. Please copy manually from the box.', 'error');
+    }
+    document.body.removeChild(ta);
+  }
+};
+
+// ============= USER ACTIONS MENU (3-DOTS) =============
+let actionUserId = null;
+
+window.openUserActions = function(userId, event) {
+  if (event) event.stopPropagation();
+  actionUserId = userId;
+  const u = allUsers.find(x => x.id === userId);
+  if (!u) return;
+  const isBlocked = u.blocked === true;
+  const isDefaultAdmin = (u.email || '').toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase();
+
+  document.getElementById('userActionsContent').innerHTML = `
+    <div style="text-align: center; padding-bottom: 14px; border-bottom: 1px solid var(--line-bright); margin-bottom: 12px;">
+      <div style="font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.5px;">${u.name || 'User'}</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); margin-top: 4px;">${u.email}</div>
+    </div>
+
+    <div class="action-sheet-item" onclick="closeModal('userActions'); openUserManage('${userId}')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      MANAGE USER
+    </div>
+
+    ${!isDefaultAdmin ? (isBlocked ? `
+      <div class="action-sheet-item warning" onclick="unblockUser('${userId}')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg>
+        UNBLOCK USER
+      </div>
+    ` : `
+      <div class="action-sheet-item danger" onclick="closeModal('userActions'); openBlockUserModal('${userId}')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zM12 11.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        BLOCK USER
+      </div>
+    `) : `
+      <div style="padding: 10px; text-align: center; font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
+        Default admin cannot be blocked
+      </div>
+    `}
+
+    <div class="action-sheet-item" style="color: var(--text-dim);" onclick="closeModal('userActions')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      CANCEL
+    </div>
+  `;
+  closeAllModals();
+  document.getElementById('modalUserActions').classList.add('active');
+};
+
+window.openBlockUserModal = function(userId) {
+  actionUserId = userId;
+  const u = allUsers.find(x => x.id === userId);
+  if (!u) return;
+  document.getElementById('blockUserTitle').textContent = `BLOCK: ${u.name || 'User'}`;
+  document.getElementById('blockReason').value = '';
+  document.getElementById('modalBlockUser').classList.add('active');
+};
+
+window.confirmBlockUser = async function() {
+  const reason = document.getElementById('blockReason').value.trim();
+  if (!reason) return toast('Please enter a reason', 'error');
+  if (!actionUserId) return;
+  try {
+    await updateDoc(doc(db, 'users', actionUserId), {
+      blocked: true,
+      blockReason: reason,
+      blockedAt: serverTimestamp()
+    });
+    closeModal('blockUser');
+    toast('User blocked successfully', 'info');
+    actionUserId = null;
+  } catch (err) {
+    toast('Error: ' + err.message, 'error');
+  }
+};
+
+window.unblockUser = async function(userId) {
+  if (!confirm('Unblock this user?')) return;
+  try {
+    await updateDoc(doc(db, 'users', userId), {
+      blocked: false,
+      blockReason: '',
+      unblockedAt: serverTimestamp()
+    });
+    closeModal('userActions');
+    toast('User unblocked', 'success');
+  } catch (err) {
+    toast('Error: ' + err.message, 'error');
+  }
+};
+
+// ============= PROFILE PIC UPLOAD =============
+window.openProfilePicUpload = function() {
+  document.getElementById('profilePicInput').click();
+};
+
+window.uploadProfilePic = async function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    toast('Image too large. Max 5MB.', 'error');
+    input.value = '';
+    return;
+  }
+  toast('Uploading profile picture...', 'info');
+  try {
+    const path = `profilePics/${currentUser.uid}/${Date.now()}_${file.name}`;
+    const ref = storageRef(storage, path);
+    const snap = await uploadBytes(ref, file);
+    const url = await getDownloadURL(snap.ref);
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      profilePic: url
+    });
+    toast('Profile picture updated!', 'success');
+    input.value = '';
+  } catch (err) {
+    console.error(err);
+    toast('Upload failed: ' + (err.message || 'Try again'), 'error');
+  }
+};
+
+// ============= SCREENSHOT VIEWER =============
+window.viewScreenshot = function(url) {
+  if (!url) return toast('No screenshot available', 'info');
+  document.getElementById('screenshotImg').src = url;
+  document.getElementById('modalScreenshot').classList.add('active');
+};
+
 // ============= ADMIN: DEPOSIT ACTIONS =============
 window.approveDeposit = async function(reqId, event) {
   const btn = event && event.target;
@@ -3419,14 +4692,25 @@ window.openUserManage = function(userId) {
   const u = allUsers.find(x => x.id === userId);
   if (!u) return;
   const initials = (u.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
+  const isBlocked = u.blocked === true;
+  const avatarHTML = u.profilePic
+    ? `<div class="avatar avatar-pic" style="background-image: url('${u.profilePic}');"></div>`
+    : `<div class="avatar">${initials}</div>`;
 
   document.getElementById('userManageContent').innerHTML = `
     <button class="modal-close" onclick="closeModal('userManage')">✕</button>
     <div class="modal-tag" style="color: var(--red);">// ADMIN • USER CONTROL</div>
-    <div class="modal-title">${u.name || 'User'}</div>
+    <div class="modal-title">${u.name || 'User'}${isBlocked ? '<span class="user-blocked-badge" style="font-size: 11px; padding: 4px 8px; vertical-align: middle;">BLOCKED</span>' : ''}</div>
+
+    ${isBlocked ? `
+      <div class="modal-info-box" style="background: rgba(239,68,68,0.05); border-color: var(--red); color: var(--red);">
+        🚫 <strong>USER IS BLOCKED</strong><br>
+        Reason: ${u.blockReason || 'Not specified'}
+      </div>
+    ` : ''}
 
     <div class="profile-card" style="margin-bottom: 14px;">
-      <div class="avatar">${initials}</div>
+      ${avatarHTML}
       <div class="profile-name" style="font-size: 20px;">${u.name || '—'}</div>
       <div class="profile-id">${u.email || '—'}</div>
       <div class="profile-stats">
@@ -3645,6 +4929,56 @@ window.adminEditStats = async function(event) {
 };
 
 // ============= MATCH MANAGEMENT =============
+let currentPrizeMode = 'perKill'; // perKill or position
+let positionPrizes = []; // [{rank: 1, prize: 5000}, ...]
+
+window.switchPrizeMode = function(mode) {
+  currentPrizeMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-pmode="${mode}"]`).classList.add('active');
+  document.getElementById('perKillFields').style.display = mode === 'perKill' ? 'block' : 'none';
+  document.getElementById('positionFields').style.display = mode === 'position' ? 'block' : 'none';
+  if (mode === 'position' && positionPrizes.length === 0) {
+    // Default to 3 positions
+    positionPrizes = [
+      { rank: 1, prize: 5000 },
+      { rank: 2, prize: 2000 },
+      { rank: 3, prize: 1000 }
+    ];
+  }
+  renderPositionPrizes();
+};
+
+window.addPositionPrize = function() {
+  const nextRank = positionPrizes.length + 1;
+  positionPrizes.push({ rank: nextRank, prize: 0 });
+  renderPositionPrizes();
+};
+
+window.removePositionPrize = function(index) {
+  positionPrizes.splice(index, 1);
+  // Re-rank
+  positionPrizes.forEach((p, i) => p.rank = i + 1);
+  renderPositionPrizes();
+};
+
+window.updatePositionPrize = function(index, value) {
+  positionPrizes[index].prize = parseInt(value) || 0;
+};
+
+function renderPositionPrizes() {
+  const list = document.getElementById('positionPrizesList');
+  if (!list) return;
+  list.innerHTML = positionPrizes.map((p, i) => `
+    <div class="position-prize-row">
+      <div class="pp-rank">#${p.rank}</div>
+      <input type="number" class="pp-input" value="${p.prize}" placeholder="Prize amount" inputmode="numeric"
+             onchange="updatePositionPrize(${i}, this.value)">
+      <button type="button" class="pp-remove" onclick="removePositionPrize(${i})">×</button>
+    </div>
+  `).join('');
+}
+
 window.editMatch = function(matchId) {
   const m = allMatches.find(x => x.id === matchId);
   if (!m) return;
@@ -3665,6 +4999,16 @@ window.editMatch = function(matchId) {
   const d = new Date(m.startTime);
   const local = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,16);
   document.getElementById('amTime').value = local;
+
+  // Set pricing mode
+  if (m.prizeMode === 'position' && Array.isArray(m.positionPrizes) && m.positionPrizes.length > 0) {
+    positionPrizes = JSON.parse(JSON.stringify(m.positionPrizes));
+    switchPrizeMode('position');
+  } else {
+    positionPrizes = [];
+    switchPrizeMode('perKill');
+  }
+
   closeAllModals();
   document.getElementById('modalAddMatch').classList.add('active');
 };
@@ -3683,8 +5027,6 @@ window.saveMatch = async function(event) {
   const format = document.getElementById('amFormat').value.trim();
   const map = document.getElementById('amMap').value.trim();
   const entry = parseInt(document.getElementById('amEntry').value);
-  const perKill = parseInt(document.getElementById('amKill').value);
-  const prize = document.getElementById('amPrize').value.trim();
   const slots = parseInt(document.getElementById('amSlots').value);
   const filledManual = document.getElementById('amFilled').value;
   const time = document.getElementById('amTime').value;
@@ -3693,20 +5035,40 @@ window.saveMatch = async function(event) {
   const message = document.getElementById('amMessage').value.trim();
   const notes = document.getElementById('amNotes').value.trim();
 
-  if (!name || !format || !map || !entry || isNaN(perKill) || !prize || !slots || !time) {
+  // Pricing mode specific data
+  let perKill = 0;
+  let prize = '';
+  let posPrizes = [];
+
+  if (currentPrizeMode === 'perKill') {
+    perKill = parseInt(document.getElementById('amKill').value) || 0;
+    prize = document.getElementById('amPrize').value.trim();
+    if (!prize) return toast('Please enter winner prize', 'error');
+  } else {
+    posPrizes = positionPrizes.filter(p => p.prize > 0);
+    if (posPrizes.length === 0) return toast('Please add at least one position prize', 'error');
+    // Build display prize string
+    prize = posPrizes.map(p => `#${p.rank}: ${p.prize}`).join(' • ');
+  }
+
+  if (!name || !format || !map || !entry || !slots || !time) {
     return toast('Please fill all required fields', 'error');
   }
 
   if (btn) { btn.disabled = true; btn.textContent = 'SAVING...'; }
 
   try {
+    const baseData = {
+      name, format, map, entry, slots,
+      perKill, prize,
+      prizeMode: currentPrizeMode,
+      positionPrizes: posPrizes,
+      startTime: new Date(time).toISOString(),
+      roomId, roomPass, message, notes
+    };
+
     if (editingMatchId) {
-      const updateData = {
-        name, format, map, entry, perKill, prize, slots,
-        startTime: new Date(time).toISOString(),
-        roomId, roomPass, message, notes
-      };
-      // Only update filled if admin manually set it
+      const updateData = { ...baseData };
       if (filledManual !== '' && !isNaN(parseInt(filledManual))) {
         updateData.filled = parseInt(filledManual);
       }
@@ -3715,16 +5077,18 @@ window.saveMatch = async function(event) {
     } else {
       const id = 'M' + Date.now().toString().slice(-5);
       await setDoc(doc(db, 'matches', id), {
-        id, name, format, map, entry, perKill, prize, slots,
+        id, ...baseData,
         filled: filledManual !== '' && !isNaN(parseInt(filledManual)) ? parseInt(filledManual) : 0,
         status: 'open',
-        startTime: new Date(time).toISOString(),
-        roomId, roomPass, message, notes,
+        resultsDeclared: false,
         createdAt: serverTimestamp()
       });
       toast('Match added successfully', 'success');
     }
     closeModal('addMatch');
+    // Reset state
+    positionPrizes = [];
+    currentPrizeMode = 'perKill';
   } catch (err) {
     toast('Error: ' + err.message, 'error');
     if (btn) { btn.disabled = false; btn.textContent = 'SAVE MATCH ▸'; }
@@ -3911,17 +5275,26 @@ function matchCardHTML(m) {
     statusText = 'OPEN';
   }
 
+  const isPosition = m.prizeMode === 'position';
+  const topPrize = isPosition && m.positionPrizes && m.positionPrizes[0]
+    ? `${m.positionPrizes[0].prize}`
+    : (m.prize || '0');
+
   return `
     <div class="match-card" data-match-id="${m.id}" onclick="showMatchDetail('${m.id}')">
       <div class="match-head">
         <span class="match-status ${statusClass}">${statusText}</span>
-        <span class="match-id">${m.id} • ${m.format}</span>
+        <span class="match-id">${m.id} • ${m.format}${isPosition ? ' • POSITION' : ''}</span>
       </div>
       <div class="match-title">${m.name}</div>
       <div class="match-info-grid">
         <div class="mi-item"><div class="mi-label">ENTRY</div><div class="mi-val">PKR ${m.entry}</div></div>
-        <div class="mi-item"><div class="mi-label">PER KILL</div><div class="mi-val kill">PKR ${m.perKill}</div></div>
-        <div class="mi-item"><div class="mi-label">PRIZE</div><div class="mi-val prize">${m.prize}</div></div>
+        ${isPosition ? `
+          <div class="mi-item"><div class="mi-label">POSITIONS</div><div class="mi-val">${(m.positionPrizes || []).length} winners</div></div>
+        ` : `
+          <div class="mi-item"><div class="mi-label">PER KILL</div><div class="mi-val kill">PKR ${m.perKill || 0}</div></div>
+        `}
+        <div class="mi-item"><div class="mi-label">${isPosition ? '#1 PRIZE' : 'PRIZE'}</div><div class="mi-val prize">PKR ${topPrize}</div></div>
       </div>
       <div class="match-foot">
         <div class="match-time" data-countdown="${m.startTime}" style="color: ${t.color};">
@@ -3992,7 +5365,35 @@ function renderProfile() {
   if (!userProfile) return;
   const initials = (userProfile.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-  set('profAvatar', initials);
+
+  // Update avatar — support profile pic
+  const avatarEl = document.getElementById('profAvatar');
+  if (avatarEl) {
+    const wrap = avatarEl.parentElement;
+    if (wrap && !wrap.classList.contains('avatar-upload-wrap')) {
+      // Upgrade to upload wrapper
+      wrap.classList.add('avatar-upload-wrap');
+      wrap.style.cursor = 'pointer';
+      wrap.onclick = () => openProfilePicUpload();
+      // Add edit button if not present
+      if (!wrap.querySelector('.avatar-edit-btn')) {
+        const editBtn = document.createElement('div');
+        editBtn.className = 'avatar-edit-btn';
+        editBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+        wrap.appendChild(editBtn);
+      }
+    }
+    if (userProfile.profilePic) {
+      avatarEl.style.backgroundImage = `url('${userProfile.profilePic}')`;
+      avatarEl.style.backgroundSize = 'cover';
+      avatarEl.style.backgroundPosition = 'center';
+      avatarEl.textContent = '';
+    } else {
+      avatarEl.style.backgroundImage = '';
+      avatarEl.textContent = initials;
+    }
+  }
+
   set('profName', userProfile.name);
   set('profId', `${userProfile.pubg_id || ''} // ${userProfile.email}`);
   set('psMatches', userProfile.matchesPlayed || 0);
@@ -4020,6 +5421,12 @@ function renderAdmDeposits() {
       <div class="req-detail"><span>METHOD</span><span style="color: var(--text);">${r.method}</span></div>
       <div class="req-detail"><span>TXN ID</span><span style="color: var(--text);">${r.txnId}</span></div>
       <div class="req-detail"><span>SENDER</span><span style="color: var(--text);">${r.sender}</span></div>
+      ${r.screenshotUrl ? `
+        <div class="req-detail">
+          <span>SCREENSHOT</span>
+          <a class="screenshot-preview-link" onclick="viewScreenshot('${r.screenshotUrl}')">📷 VIEW IMAGE</a>
+        </div>
+      ` : ''}
       <div class="req-detail"><span>STATUS</span><span class="hi-status ${r.status}" style="margin-top:0;">${r.status.toUpperCase()}</span></div>
       ${r.status === 'pending' ? `
         <div class="req-actions">
@@ -4064,12 +5471,14 @@ function renderAdmMatches() {
   if (!el) return;
   el.innerHTML = allMatches.length ? allMatches.map(m => {
     const t = timeUntil(m.startTime);
+    const isPosition = m.prizeMode === 'position';
+    const isCompleted = m.resultsDeclared || m.status === 'completed';
     return `
-      <div class="adm-match-card">
+      <div class="adm-match-card" ${isCompleted ? 'style="opacity: 0.85; border-color: var(--green);"' : ''}>
         <div class="amc-head">
           <div>
-            <div class="match-title" style="font-size:20px; margin-bottom:4px;">${m.name}</div>
-            <div class="match-id">${m.id} • ${m.format} • ${m.map}</div>
+            <div class="match-title" style="font-size:20px; margin-bottom:4px;">${m.name}${isCompleted ? ' <span style="font-size:10px; color: var(--green); font-family: \'JetBrains Mono\', monospace;">✓ COMPLETED</span>' : ''}</div>
+            <div class="match-id">${m.id} • ${m.format} • ${m.map} • ${isPosition ? 'POSITION-BASED' : 'PER KILL'}</div>
           </div>
           <span class="match-status s-open" data-countdown="${m.startTime}" style="color: ${t.color}; border-color: ${t.color};">
             <span class="countdown-label">${t.started ? 'STARTED' : t.label}</span>
@@ -4077,8 +5486,12 @@ function renderAdmMatches() {
         </div>
         <div class="match-info-grid" style="margin: 10px 0;">
           <div class="mi-item"><div class="mi-label">ENTRY</div><div class="mi-val">${m.entry}</div></div>
-          <div class="mi-item"><div class="mi-label">KILL</div><div class="mi-val kill">${m.perKill}</div></div>
-          <div class="mi-item"><div class="mi-label">PRIZE</div><div class="mi-val prize">${m.prize}</div></div>
+          ${isPosition ? `
+            <div class="mi-item"><div class="mi-label">POSITIONS</div><div class="mi-val">${(m.positionPrizes || []).length}</div></div>
+          ` : `
+            <div class="mi-item"><div class="mi-label">KILL</div><div class="mi-val kill">${m.perKill || 0}</div></div>
+          `}
+          <div class="mi-item"><div class="mi-label">PRIZE</div><div class="mi-val prize" style="font-size: 14px;">${isPosition ? 'Top ' + (m.positionPrizes || []).length : m.prize}</div></div>
         </div>
         <div class="match-slots" style="margin-bottom: 8px;"><span>${m.filled || 0}</span>/${m.slots} SLOTS FILLED</div>
         ${m.roomId ? `<div class="match-id" style="color: var(--green); margin-bottom: 4px;">✓ Room ID set</div>` : `<div class="match-id" style="color: var(--amber); margin-bottom: 4px;">⚠ Room ID not set yet</div>`}
@@ -4086,6 +5499,9 @@ function renderAdmMatches() {
           <button class="btn-edit" onclick="editMatch('${m.id}')">EDIT</button>
           <button class="btn-delete" onclick="deleteMatch('${m.id}')">DELETE</button>
         </div>
+        <button class="submit-btn" style="margin-top: 8px; background: ${isCompleted ? 'var(--bg-3)' : 'var(--green)'}; color: ${isCompleted ? 'var(--text)' : '#000'}; padding: 10px; font-size: 14px;" onclick="openBulkResults('${m.id}')">
+          ${isCompleted ? '↻ RE-DECLARE RESULTS' : '🏆 DECLARE RESULTS'}
+        </button>
       </div>
     `;
   }).join('') : emptyState('No matches. + button se add karein');
@@ -4096,14 +5512,23 @@ function renderAdmUsers() {
   if (!el) return;
   el.innerHTML = allUsers.length ? allUsers.map(u => {
     const initials = (u.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
+    const isBlocked = u.blocked === true;
+    const avatarStyle = u.profilePic
+      ? `<div class="avatar avatar-pic" style="background-image: url('${u.profilePic}');"></div>`
+      : `<div class="avatar">${initials}</div>`;
     return `
-      <div class="user-row" onclick="openUserManage('${u.id}')">
-        <div class="avatar">${initials}</div>
-        <div>
-          <div class="ur-name">${u.name || 'User'}</div>
-          <div class="ur-id">${u.email || ''}</div>
+      <div class="user-row" style="${isBlocked ? 'opacity: 0.6; border-color: var(--red);' : ''}">
+        <div onclick="openUserManage('${u.id}')" style="display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; min-width: 0;">
+          ${avatarStyle}
+          <div style="min-width: 0; flex: 1;">
+            <div class="ur-name">${u.name || 'User'}${isBlocked ? '<span class="user-blocked-badge">BLOCKED</span>' : ''}</div>
+            <div class="ur-id" style="overflow: hidden; text-overflow: ellipsis;">${u.email || ''}</div>
+          </div>
         </div>
-        <div class="ur-balance">PKR ${fmt(u.balance)}</div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div class="ur-balance">PKR ${fmt(u.balance)}</div>
+          <button class="user-row-menu-btn" onclick="openUserActions('${u.id}', event)">⋮</button>
+        </div>
       </div>
     `;
   }).join('') : emptyState('No users yet');
