@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#ff6b1a">
+<meta name="theme-color" content="#0a0a0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -597,30 +597,7 @@ input, select, textarea { font-family: inherit; }
 
 /* === PULL TO REFRESH === */
 .pull-refresh-indicator {
-  position: absolute;
-  top: -60px;
-  left: 0;
-  right: 0;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--orange);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  pointer-events: none;
-  transition: transform 0.2s ease-out;
-  z-index: 5;
-}
-.pull-refresh-indicator svg {
-  width: 22px;
-  height: 22px;
-  transition: transform 0.2s;
-}
-.pull-refresh-indicator.refreshing svg {
-  animation: spin 1s linear infinite;
+  display: none;
 }
 
 /* === PROFILE MONEY ACTIONS (big prominent buttons) === */
@@ -1650,7 +1627,7 @@ input, select, textarea { font-family: inherit; }
   margin-top: 10px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-cancel, .btn-delay {
   flex: 1;
   padding: 8px;
   font-family: 'JetBrains Mono', monospace;
@@ -1662,6 +1639,10 @@ input, select, textarea { font-family: inherit; }
 
 .btn-edit { background: var(--bg-3); border: 1px solid var(--blue); color: var(--blue); }
 .btn-delete { background: var(--bg-3); border: 1px solid var(--red); color: var(--red); }
+.btn-cancel { background: var(--bg-3); border: 1px solid var(--amber); color: var(--amber); }
+.btn-delay { background: var(--bg-3); border: 1px solid var(--purple); color: var(--purple); }
+.btn-cancel:hover, .btn-cancel:active { background: rgba(255,179,0,0.1); }
+.btn-delay:hover, .btn-delay:active { background: rgba(168,85,247,0.1); }
 
 .action-grid {
   display: grid;
@@ -2359,12 +2340,6 @@ input, select, textarea { font-family: inherit; }
 
   <main class="app-main" id="appMain">
 
-    <!-- Pull-to-refresh indicator -->
-    <div class="pull-refresh-indicator" id="pullRefreshIndicator">
-      <svg id="pullRefreshIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-      <span id="pullRefreshText">Pull to refresh</span>
-    </div>
-
     <!-- DASHBOARD -->
     <section class="screen active" data-screen="dashboard">
       <div class="greeting">
@@ -3017,6 +2992,42 @@ input, select, textarea { font-family: inherit; }
 <!-- Admin: User Manage -->
 <div class="modal-overlay" id="modalUserManage">
   <div class="modal" id="userManageContent"></div>
+</div>
+
+<!-- Delay Match -->
+<div class="modal-overlay" id="modalDelayMatch">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('delayMatch')">✕</button>
+    <div class="modal-tag" style="color: var(--purple);">// DELAY MATCH</div>
+    <div class="modal-title">DELAY MATCH</div>
+
+    <div class="modal-info-box" style="background: rgba(168,85,247,0.05); border-color: var(--purple); color: var(--purple);">
+      ⏱ Update match start time. Joined players ko notification text bhi mil jayega.
+    </div>
+
+    <div class="info-list" style="margin-bottom: 14px;">
+      <div class="info-row">
+        <span class="info-label">MATCH</span>
+        <span class="info-value" id="delayMatchName">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">CURRENT TIME</span>
+        <span class="info-value" id="delayCurrentTime" style="font-size: 12px;">—</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>NEW START TIME</label>
+      <input type="datetime-local" id="delayNewTime">
+    </div>
+
+    <div class="field">
+      <label>REASON (OPTIONAL)</label>
+      <textarea id="delayReason" rows="2" placeholder="e.g. Server issue, will start late..."></textarea>
+    </div>
+
+    <button class="submit-btn" style="background: var(--purple); color: #fff;" onclick="confirmDelayMatch()">CONFIRM DELAY ▸</button>
+  </div>
 </div>
 
 <!-- Add Admin Email -->
@@ -3867,85 +3878,7 @@ window.navTo = function(screen) {
 };
 
 // ============= MODALS =============
-// === PULL TO REFRESH ===
-(function setupPullToRefresh() {
-  const main = document.getElementById('appMain');
-  const indicator = document.getElementById('pullRefreshIndicator');
-  const icon = document.getElementById('pullRefreshIcon');
-  const text = document.getElementById('pullRefreshText');
-  if (!main || !indicator) return;
-
-  let startY = 0;
-  let pullDistance = 0;
-  let isPulling = false;
-  let isRefreshing = false;
-  const PULL_THRESHOLD = 70;
-
-  main.addEventListener('touchstart', (e) => {
-    if (isRefreshing) return;
-    if (main.scrollTop === 0) {
-      startY = e.touches[0].clientY;
-      isPulling = true;
-    }
-  }, { passive: true });
-
-  main.addEventListener('touchmove', (e) => {
-    if (!isPulling || isRefreshing) return;
-    const currentY = e.touches[0].clientY;
-    pullDistance = currentY - startY;
-
-    if (pullDistance > 0 && main.scrollTop === 0) {
-      // Apply some resistance for natural feel
-      const dampened = Math.min(pullDistance * 0.5, 100);
-      indicator.style.transform = `translateY(${dampened}px)`;
-
-      if (dampened >= PULL_THRESHOLD) {
-        text.textContent = 'Release to refresh';
-        icon.style.transform = 'rotate(180deg)';
-      } else {
-        text.textContent = 'Pull to refresh';
-        icon.style.transform = `rotate(${dampened * 2}deg)`;
-      }
-    } else {
-      isPulling = false;
-    }
-  }, { passive: true });
-
-  main.addEventListener('touchend', async () => {
-    if (!isPulling || isRefreshing) {
-      isPulling = false;
-      return;
-    }
-    isPulling = false;
-    const dampened = Math.min(pullDistance * 0.5, 100);
-
-    if (dampened >= PULL_THRESHOLD) {
-      // Trigger refresh
-      isRefreshing = true;
-      indicator.classList.add('refreshing');
-      indicator.style.transform = 'translateY(60px)';
-      text.textContent = 'Refreshing...';
-      icon.style.transform = '';
-
-      try {
-        await window.refreshAllData();
-      } catch (e) { /* ignore */ }
-
-      // Hide after a short delay
-      setTimeout(() => {
-        indicator.style.transform = '';
-        indicator.classList.remove('refreshing');
-        text.textContent = 'Pull to refresh';
-        isRefreshing = false;
-        pullDistance = 0;
-      }, 800);
-    } else {
-      indicator.style.transform = '';
-      icon.style.transform = '';
-      pullDistance = 0;
-    }
-  });
-})();
+// Pull-to-refresh removed - users use Profile reload or refresh button
 
 // === REFRESH ALL DATA (manual refresh button) ===
 window.refreshAllData = async function() {
@@ -4040,6 +3973,7 @@ window.closeModal = function(name) {
     addMatch: 'modalAddMatch', match: 'modalMatch',
     userManage: 'modalUserManage', joined: 'modalJoined',
     addAdmin: 'modalAddAdmin',
+    delayMatch: 'modalDelayMatch',
     bulkResults: 'modalBulkResults', waShare: 'modalWaShare',
     userActions: 'modalUserActions', blockUser: 'modalBlockUser',
     screenshot: 'modalScreenshot',
@@ -4201,45 +4135,42 @@ window.submitDeposit = async function(event) {
     let screenshotBase64 = '';
 
     if (file) {
-      if (btn) btn.textContent = 'UPLOADING IMAGE...';
+      if (btn) btn.textContent = 'COMPRESSING...';
 
-      // METHOD 1: Try Firebase Storage upload
-      let storageWorked = false;
       try {
-        const path = `deposits/${currentUser.uid}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
-        const ref = storageRef(storage, path);
-        const snap = await uploadBytes(ref, file);
-        screenshotUrl = await getDownloadURL(snap.ref);
-        storageWorked = true;
-        console.log('[Deposit] Screenshot uploaded to Storage:', screenshotUrl);
-      } catch (uploadErr) {
-        console.warn('[Deposit] Firebase Storage upload failed, falling back to base64:', uploadErr);
-      }
+        // Aggressive compression - target ~500KB max base64 size
+        // Try multiple quality levels until small enough
+        const tries = [
+          { width: 1000, quality: 0.7 },
+          { width: 800, quality: 0.6 },
+          { width: 700, quality: 0.5 },
+          { width: 600, quality: 0.45 },
+          { width: 500, quality: 0.4 },
+          { width: 400, quality: 0.35 }
+        ];
 
-      // METHOD 2: Fallback - compress and store as base64 in Firestore (works without Storage)
-      if (!storageWorked) {
-        if (btn) btn.textContent = 'COMPRESSING IMAGE...';
-        try {
-          screenshotBase64 = await compressImageToBase64(file, 800, 0.7);
-          // Check if size is manageable (Firestore field limit is 1MB)
-          if (screenshotBase64.length > 950000) {
-            // Try smaller
-            screenshotBase64 = await compressImageToBase64(file, 600, 0.5);
-          }
-          if (screenshotBase64.length > 950000) {
-            screenshotBase64 = '';
-            toast('Image too large to attach. Submitting without screenshot.', 'info');
-          } else {
-            console.log('[Deposit] Screenshot encoded as base64, size:', screenshotBase64.length);
-          }
-        } catch (compErr) {
-          console.error('[Deposit] Base64 fallback failed:', compErr);
-          screenshotBase64 = '';
+        for (const t of tries) {
+          screenshotBase64 = await compressImageToBase64(file, t.width, t.quality);
+          const sizeKB = Math.round(screenshotBase64.length / 1024);
+          console.log(`[Deposit] Tried ${t.width}px @ ${t.quality}: ${sizeKB}KB`);
+          if (screenshotBase64.length < 700000) break; // Under 700KB - safe for Firestore
         }
+
+        if (screenshotBase64.length > 900000) {
+          console.warn('[Deposit] Image too large after compression, skipping');
+          screenshotBase64 = '';
+          toast('Image too large to attach. Continuing without screenshot.', 'info');
+        } else {
+          console.log('[Deposit] Final screenshot size:', Math.round(screenshotBase64.length / 1024) + 'KB');
+        }
+      } catch (compErr) {
+        console.error('[Deposit] Image compression failed:', compErr);
+        screenshotBase64 = '';
+        toast('Could not process image. Continuing without screenshot.', 'info');
       }
     }
 
-    if (btn) btn.textContent = 'SUBMITTING...';
+    if (btn) btn.textContent = 'SAVING REQUEST...';
     const reqId = genId('DEP');
     const reqData = {
       id: reqId,
@@ -4257,7 +4188,20 @@ window.submitDeposit = async function(event) {
       date: new Date().toISOString()
     };
 
-    await setDoc(doc(db, 'depositRequests', reqId), reqData);
+    try {
+      await setDoc(doc(db, 'depositRequests', reqId), reqData);
+    } catch (saveErr) {
+      console.error('[Deposit] Failed to save request:', saveErr);
+      // If too large, retry without screenshot
+      if (screenshotBase64 && (saveErr.message || '').toLowerCase().includes('size')) {
+        console.warn('[Deposit] Retrying without screenshot due to size limit');
+        toast('Screenshot too large. Saving without image...', 'info');
+        reqData.screenshotBase64 = '';
+        await setDoc(doc(db, 'depositRequests', reqId), reqData);
+      } else {
+        throw saveErr;
+      }
+    }
 
     await setDoc(doc(db, 'users', currentUser.uid, 'transactions', reqId), {
       id: reqId,
@@ -4290,18 +4234,32 @@ window.submitDeposit = async function(event) {
 // Compresses an image file to a smaller base64 string that fits in Firestore
 function compressImageToBase64(file, maxWidth = 800, quality = 0.7) {
   return new Promise((resolve, reject) => {
+    // Safety timeout - if anything hangs, fail in 15 seconds
+    const safetyTimeout = setTimeout(() => {
+      reject(new Error('Image processing timeout (15s)'));
+    }, 15000);
+
+    const cleanup = () => clearTimeout(safetyTimeout);
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Failed to read file'));
+
+    reader.onerror = () => { cleanup(); reject(new Error('Failed to read file')); };
     reader.onload = (e) => {
       const img = new Image();
-      img.onerror = () => reject(new Error('Failed to load image'));
+      img.onerror = () => { cleanup(); reject(new Error('Failed to load image - format may not be supported')); };
       img.onload = () => {
         try {
           // Calculate new dimensions maintaining aspect ratio
-          let width = img.width;
-          let height = img.height;
+          let width = img.naturalWidth || img.width;
+          let height = img.naturalHeight || img.height;
+
+          if (!width || !height) {
+            cleanup();
+            reject(new Error('Could not determine image dimensions'));
+            return;
+          }
+
           if (width > maxWidth) {
-            height = (height * maxWidth) / width;
+            height = Math.round((height * maxWidth) / width);
             width = maxWidth;
           }
 
@@ -4310,12 +4268,18 @@ function compressImageToBase64(file, maxWidth = 800, quality = 0.7) {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
+
+          // Fill background white (handles transparent PNGs converting to JPG)
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Convert to base64 JPEG (smaller than PNG)
+          // Convert to base64 JPEG
           const base64 = canvas.toDataURL('image/jpeg', quality);
+          cleanup();
           resolve(base64);
         } catch (err) {
+          cleanup();
           reject(err);
         }
       };
@@ -5681,6 +5645,207 @@ window.deleteMatch = async function(matchId) {
   } catch (err) { toast('Error: ' + err.message, 'error'); }
 };
 
+// === CANCEL MATCH WITH AUTOMATIC REFUNDS ===
+window.cancelMatch = async function(matchId) {
+  const m = allMatches.find(x => x.id === matchId);
+  if (!m) return;
+
+  // Find joined players who would need refund
+  const joinedPlayers = allUsers.filter(u => (u.joinedMatches || []).includes(matchId));
+  const totalRefund = joinedPlayers.length * (m.entry || 0);
+
+  if (m.status === 'cancelled') {
+    return toast('Match is already cancelled', 'info');
+  }
+
+  if (m.resultsDeclared) {
+    return toast('Cannot cancel - results already declared', 'error');
+  }
+
+  const ok = await showConfirm({
+    title: 'CANCEL MATCH?',
+    message: `${m.name} cancel hoga aur ${joinedPlayers.length} joined players ko PKR ${fmt(m.entry)} each refund ho jayega (Total: PKR ${fmt(totalRefund)}).`,
+    tag: '// CANCEL & REFUND',
+    okText: 'CANCEL & REFUND ALL',
+    iconType: 'warning',
+    danger: true
+  });
+  if (!ok) return;
+
+  try {
+    toast('Refunding players...', 'info');
+
+    // Process refunds in batches (Firestore limit is 500 ops)
+    let batch = writeBatch(db);
+    let opCount = 0;
+    const batches = [batch];
+
+    for (const u of joinedPlayers) {
+      // Refund balance
+      batch.update(doc(db, 'users', u.id), {
+        balance: increment(m.entry),
+        joinedMatches: arrayRemove(matchId)
+      });
+      opCount++;
+
+      // Add refund transaction
+      const txId = genId('REFUND');
+      batch.set(doc(db, 'users', u.id, 'transactions', txId), {
+        id: txId,
+        type: 'admin-credit',
+        amount: m.entry,
+        note: `Match cancelled: ${m.name} - Entry refunded`,
+        status: 'completed',
+        createdAt: serverTimestamp(),
+        date: new Date().toISOString()
+      });
+      opCount++;
+
+      if (opCount >= 400) {
+        batch = writeBatch(db);
+        batches.push(batch);
+        opCount = 0;
+      }
+    }
+
+    // Mark match as cancelled
+    batch.update(doc(db, 'matches', matchId), {
+      status: 'cancelled',
+      cancelledAt: serverTimestamp(),
+      filled: 0
+    });
+
+    // Commit all batches
+    for (const b of batches) {
+      await b.commit();
+    }
+
+    toast(`Match cancelled! ${joinedPlayers.length} players refunded PKR ${fmt(m.entry)} each.`, 'success');
+  } catch (err) {
+    console.error('Cancel match error:', err);
+    toast('Error: ' + (err.message || 'Failed to cancel'), 'error');
+  }
+};
+
+// === DELAY MATCH ===
+let delayingMatchId = null;
+window.delayMatch = function(matchId) {
+  const m = allMatches.find(x => x.id === matchId);
+  if (!m) return;
+  if (m.status === 'cancelled') return toast('Match is cancelled', 'error');
+  if (m.resultsDeclared) return toast('Match already completed', 'error');
+
+  delayingMatchId = matchId;
+  const currentTime = new Date(m.startTime);
+  // Format for datetime-local input
+  const local = new Date(currentTime.getTime() - currentTime.getTimezoneOffset() * 60000)
+    .toISOString().slice(0, 16);
+
+  document.getElementById('delayMatchName').textContent = m.name;
+  document.getElementById('delayCurrentTime').textContent = currentTime.toLocaleString();
+  document.getElementById('delayNewTime').value = local;
+  document.getElementById('delayReason').value = '';
+  document.getElementById('modalDelayMatch').classList.add('active');
+};
+
+window.confirmDelayMatch = async function() {
+  if (!delayingMatchId) return;
+  const newTime = document.getElementById('delayNewTime').value;
+  const reason = document.getElementById('delayReason').value.trim();
+
+  if (!newTime) return toast('Please select new time', 'error');
+
+  const m = allMatches.find(x => x.id === delayingMatchId);
+  if (!m) return;
+
+  const newDate = new Date(newTime);
+  const oldDate = new Date(m.startTime);
+
+  if (newDate <= new Date()) {
+    return toast('New time must be in the future', 'error');
+  }
+
+  try {
+    await updateDoc(doc(db, 'matches', delayingMatchId), {
+      startTime: newDate.toISOString(),
+      delayedAt: serverTimestamp(),
+      delayReason: reason || `Match delayed from ${oldDate.toLocaleString()} to ${newDate.toLocaleString()}`,
+      previousStartTime: m.startTime
+    });
+
+    closeModal('delayMatch');
+    toast(`Match delayed to ${newDate.toLocaleString()}`, 'success');
+
+    // Show WhatsApp share text for delay notification
+    const joinedCount = allUsers.filter(u => (u.joinedMatches || []).includes(delayingMatchId)).length;
+    if (joinedCount > 0) {
+      showDelayNotificationModal(m, oldDate, newDate, reason, joinedCount);
+    }
+
+    delayingMatchId = null;
+  } catch (err) {
+    toast('Error: ' + err.message, 'error');
+  }
+};
+
+function showDelayNotificationModal(match, oldDate, newDate, reason, joinedCount) {
+  const text = `⏰ *MATCH DELAYED*
+
+🎮 *${match.name}*
+
+⏱ *Previous Time:* ${oldDate.toLocaleString()}
+🕐 *New Time:* ${newDate.toLocaleString()}
+
+${reason ? `📝 *Reason:* ${reason}\n\n` : ''}👥 *Affected Players:* ${joinedCount}
+
+Sab joined players ko inform kiya jata hai. Aap ka entry fee safe hai.
+
+_Powered by BATTLEGROUNDS PK_`;
+
+  document.getElementById('waShareContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal('waShare')">✕</button>
+    <div style="text-align: center; padding-bottom: 14px;">
+      <div style="width: 64px; height: 64px; margin: 0 auto 12px; background: var(--purple); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 24 24" fill="#fff" style="width: 36px; height: 36px;"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+      </div>
+      <div class="modal-tag" style="color: var(--purple);">// MATCH DELAYED</div>
+      <div class="modal-title">DELAY NOTIFICATION</div>
+    </div>
+
+    <div class="modal-info-box" style="background: rgba(168,85,247,0.05); border-color: var(--purple); color: var(--purple);">
+      ✓ Match time updated successfully<br>
+      📢 Notify players via WhatsApp group below
+    </div>
+
+    <div style="margin-top: 14px;"><div class="modal-tag">// COPY FOR WHATSAPP</div></div>
+
+    <div class="whatsapp-result-box">${text.replace(/</g, '&lt;')}</div>
+
+    <button class="submit-btn" style="background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;" onclick="copyDelayText()">
+      📋 COPY MESSAGE
+    </button>
+
+    ${groupLink ? `
+      <a href="${groupLink}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="submit-btn" style="background: #128C7E; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          📲 OPEN WHATSAPP GROUP
+        </button>
+      </a>
+    ` : ''}
+  `;
+  window._delayText = text;
+  document.getElementById('modalWaShare').classList.add('active');
+}
+
+window.copyDelayText = async function() {
+  try {
+    await navigator.clipboard.writeText(window._delayText);
+    toast('Copied! Paste in WhatsApp group', 'success');
+  } catch (err) {
+    toast('Could not copy. Copy manually from box.', 'error');
+  }
+};
+
 window.saveMatch = async function(event) {
   const btn = event && event.target;
   const name = document.getElementById('amName').value.trim();
@@ -5882,7 +6047,7 @@ function renderDashboard() {
   if (sw) sw.textContent = userProfile.totalWins || 0;
 
   const upcoming = allMatches
-    .filter(m => m.status !== 'done')
+    .filter(m => m.status !== 'done' && m.status !== 'cancelled' && m.status !== 'completed')
     .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
     .slice(0, 2);
   const dm = document.getElementById('dashMatches');
@@ -5913,7 +6078,7 @@ function renderGroupBanner() {
 }
 
 function renderMatches() {
-  const all = allMatches.filter(m => m.status !== 'done')
+  const all = allMatches.filter(m => m.status !== 'done' && m.status !== 'cancelled' && m.status !== 'completed')
     .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   const el = document.getElementById('allMatches');
   if (el) el.innerHTML = all.map(matchCardHTML).join('') || emptyState('No matches available');
@@ -6119,11 +6284,18 @@ function renderAdmMatches() {
     const t = timeUntil(m.startTime);
     const isPosition = m.prizeMode === 'position';
     const isCompleted = m.resultsDeclared || m.status === 'completed';
+    const isCancelled = m.status === 'cancelled';
+    const cardStyle = isCancelled
+      ? 'style="opacity: 0.6; border-color: var(--amber);"'
+      : (isCompleted ? 'style="opacity: 0.85; border-color: var(--green);"' : '');
+    const statusBadge = isCancelled
+      ? ' <span style="font-size:10px; color: var(--amber); font-family: \'JetBrains Mono\', monospace;">⚠ CANCELLED</span>'
+      : (isCompleted ? ' <span style="font-size:10px; color: var(--green); font-family: \'JetBrains Mono\', monospace;">✓ COMPLETED</span>' : '');
     return `
-      <div class="adm-match-card" ${isCompleted ? 'style="opacity: 0.85; border-color: var(--green);"' : ''}>
+      <div class="adm-match-card" ${cardStyle}>
         <div class="amc-head">
           <div>
-            <div class="match-title" style="font-size:20px; margin-bottom:4px;">${m.name}${isCompleted ? ' <span style="font-size:10px; color: var(--green); font-family: \'JetBrains Mono\', monospace;">✓ COMPLETED</span>' : ''}</div>
+            <div class="match-title" style="font-size:20px; margin-bottom:4px;">${m.name}${statusBadge}</div>
             <div class="match-id">${m.id} • ${m.format} • ${m.map} • ${isPosition ? 'POSITION-BASED' : 'PER KILL'}</div>
           </div>
           <span class="match-status s-open" data-countdown="${m.startTime}" style="color: ${t.color}; border-color: ${t.color};">
@@ -6141,8 +6313,10 @@ function renderAdmMatches() {
         </div>
         <div class="match-slots" style="margin-bottom: 8px;"><span>${m.filled || 0}</span>/${m.slots} SLOTS FILLED</div>
         ${m.roomId ? `<div class="match-id" style="color: var(--green); margin-bottom: 4px;">✓ Room ID set</div>` : `<div class="match-id" style="color: var(--amber); margin-bottom: 4px;">⚠ Room ID not set yet</div>`}
-        <div class="amc-actions">
+        <div class="amc-actions" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
           <button class="btn-edit" onclick="editMatch('${m.id}')">EDIT</button>
+          <button class="btn-delay" onclick="delayMatch('${m.id}')">DELAY</button>
+          <button class="btn-cancel" onclick="cancelMatch('${m.id}')">CANCEL</button>
           <button class="btn-delete" onclick="deleteMatch('${m.id}')">DELETE</button>
         </div>
         <button class="submit-btn" style="margin-top: 8px; background: ${isCompleted ? 'var(--bg-3)' : 'var(--green)'}; color: ${isCompleted ? 'var(--text)' : '#000'}; padding: 10px; font-size: 14px;" onclick="openBulkResults('${m.id}')">
