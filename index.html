@@ -508,32 +508,30 @@ input, select, textarea { font-family: inherit; }
 
 /* === NEW DASHBOARD ACTIONS (outside balance card for guaranteed clicks) === */
 .dash-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: block;
   margin-bottom: 18px;
 }
 
 .dash-btn {
+  width: 100%;
   background: var(--bg-3);
   border: 1px solid var(--line-bright);
   color: var(--text);
-  padding: 14px 8px;
+  padding: 16px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 14px;
-  letter-spacing: 1.5px;
+  font-size: 16px;
+  letter-spacing: 2px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 10px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
   -webkit-tap-highlight-color: rgba(255,107,26,0.3);
   user-select: none;
   touch-action: manipulation;
-  min-height: 64px;
 }
 
 .dash-btn:active {
@@ -587,6 +585,34 @@ input, select, textarea { font-family: inherit; }
 
 .bc-btn {
   display: none;
+}
+
+/* === PULL TO REFRESH === */
+.pull-refresh-indicator {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--orange);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  pointer-events: none;
+  transition: transform 0.2s ease-out;
+  z-index: 5;
+}
+.pull-refresh-indicator svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s;
+}
+.pull-refresh-indicator.refreshing svg {
+  animation: spin 1s linear infinite;
 }
 
 /* === PROFILE MONEY ACTIONS (big prominent buttons) === */
@@ -2325,6 +2351,12 @@ input, select, textarea { font-family: inherit; }
 
   <main class="app-main" id="appMain">
 
+    <!-- Pull-to-refresh indicator -->
+    <div class="pull-refresh-indicator" id="pullRefreshIndicator">
+      <svg id="pullRefreshIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      <span id="pullRefreshText">Pull to refresh</span>
+    </div>
+
     <!-- DASHBOARD -->
     <section class="screen active" data-screen="dashboard">
       <div class="greeting">
@@ -2340,11 +2372,7 @@ input, select, textarea { font-family: inherit; }
       <div class="dash-actions">
         <button class="dash-btn deposit-btn" type="button" onclick="window.openModal('deposit')">
           <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px; height:18px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-          DEPOSIT
-        </button>
-        <button class="dash-btn refresh-btn" type="button" onclick="refreshAllData()" id="refreshBtn">
-          <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px; height:18px;"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-          REFRESH
+          DEPOSIT FUNDS
         </button>
       </div>
 
@@ -2389,12 +2417,7 @@ input, select, textarea { font-family: inherit; }
     <!-- PROFILE -->
     <section class="screen" data-screen="profile">
       <div class="profile-card">
-        <div class="avatar-upload-wrap" onclick="openProfilePicUpload()">
-          <div class="avatar" id="profAvatar">P</div>
-          <div class="avatar-edit-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          </div>
-        </div>
+        <div class="avatar" id="profAvatar">P</div>
         <div class="profile-name" id="profName">PLAYER</div>
         <div class="profile-id" id="profId">ID</div>
         <div class="profile-stats">
@@ -2426,11 +2449,6 @@ input, select, textarea { font-family: inherit; }
         <div class="action-row" onclick="window.openModal('editProfile')">
           <div class="action-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></div>
           <div class="action-text">EDIT PROFILE</div>
-          <div class="action-arrow">›</div>
-        </div>
-        <div class="action-row" onclick="window.hardRefresh()">
-          <div class="action-icon" style="color: var(--blue);"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
-          <div class="action-text">RELOAD APP</div>
           <div class="action-arrow">›</div>
         </div>
         <div class="action-row" onclick="window.logout()">
@@ -3081,9 +3099,6 @@ input, select, textarea { font-family: inherit; }
     <button id="alertOkBtn" type="button" class="submit-btn" style="margin: 0;">OK</button>
   </div>
 </div>
-
-<!-- Profile Pic Upload (file input only, no UI needed) -->
-<input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="uploadProfilePic(this)" />
 
 <!-- Firebase SDK + App Logic -->
 <script type="module">
@@ -3844,6 +3859,86 @@ window.navTo = function(screen) {
 };
 
 // ============= MODALS =============
+// === PULL TO REFRESH ===
+(function setupPullToRefresh() {
+  const main = document.getElementById('appMain');
+  const indicator = document.getElementById('pullRefreshIndicator');
+  const icon = document.getElementById('pullRefreshIcon');
+  const text = document.getElementById('pullRefreshText');
+  if (!main || !indicator) return;
+
+  let startY = 0;
+  let pullDistance = 0;
+  let isPulling = false;
+  let isRefreshing = false;
+  const PULL_THRESHOLD = 70;
+
+  main.addEventListener('touchstart', (e) => {
+    if (isRefreshing) return;
+    if (main.scrollTop === 0) {
+      startY = e.touches[0].clientY;
+      isPulling = true;
+    }
+  }, { passive: true });
+
+  main.addEventListener('touchmove', (e) => {
+    if (!isPulling || isRefreshing) return;
+    const currentY = e.touches[0].clientY;
+    pullDistance = currentY - startY;
+
+    if (pullDistance > 0 && main.scrollTop === 0) {
+      // Apply some resistance for natural feel
+      const dampened = Math.min(pullDistance * 0.5, 100);
+      indicator.style.transform = `translateY(${dampened}px)`;
+
+      if (dampened >= PULL_THRESHOLD) {
+        text.textContent = 'Release to refresh';
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        text.textContent = 'Pull to refresh';
+        icon.style.transform = `rotate(${dampened * 2}deg)`;
+      }
+    } else {
+      isPulling = false;
+    }
+  }, { passive: true });
+
+  main.addEventListener('touchend', async () => {
+    if (!isPulling || isRefreshing) {
+      isPulling = false;
+      return;
+    }
+    isPulling = false;
+    const dampened = Math.min(pullDistance * 0.5, 100);
+
+    if (dampened >= PULL_THRESHOLD) {
+      // Trigger refresh
+      isRefreshing = true;
+      indicator.classList.add('refreshing');
+      indicator.style.transform = 'translateY(60px)';
+      text.textContent = 'Refreshing...';
+      icon.style.transform = '';
+
+      try {
+        await window.refreshAllData();
+      } catch (e) { /* ignore */ }
+
+      // Hide after a short delay
+      setTimeout(() => {
+        indicator.style.transform = '';
+        indicator.classList.remove('refreshing');
+        text.textContent = 'Pull to refresh';
+        isRefreshing = false;
+        pullDistance = 0;
+      }, 800);
+    } else {
+      indicator.style.transform = '';
+      icon.style.transform = '';
+      pullDistance = 0;
+    }
+  });
+})();
+
 // === REFRESH ALL DATA (manual refresh button) ===
 window.refreshAllData = async function() {
   const btn = document.getElementById('refreshBtn');
@@ -5117,9 +5212,7 @@ window.openUserManage = function(userId) {
   if (!u) return;
   const initials = (u.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
   const isBlocked = u.blocked === true;
-  const avatarHTML = u.profilePic
-    ? `<div class="avatar avatar-pic" style="background-image: url('${u.profilePic}');"></div>`
-    : `<div class="avatar">${initials}</div>`;
+  const avatarHTML = `<div class="avatar">${initials}</div>`;
 
   document.getElementById('userManageContent').innerHTML = `
     <button class="modal-close" onclick="closeModal('userManage')">✕</button>
@@ -5806,22 +5899,10 @@ function renderProfile() {
   const initials = (userProfile.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
 
-  // Update avatar with profile pic or initials
+  // Simple avatar with initials
   const avatarEl = document.getElementById('profAvatar');
   if (avatarEl) {
-    if (userProfile.profilePic) {
-      // Override the gradient background with the image
-      avatarEl.style.setProperty('background', `url('${userProfile.profilePic}') center/cover no-repeat`, 'important');
-      avatarEl.style.setProperty('color', 'transparent', 'important');
-      avatarEl.style.setProperty('font-size', '0', 'important');
-      avatarEl.textContent = '';
-    } else {
-      // Reset to default - remove inline styles so CSS gradient takes over
-      avatarEl.style.removeProperty('background');
-      avatarEl.style.removeProperty('color');
-      avatarEl.style.removeProperty('font-size');
-      avatarEl.textContent = initials;
-    }
+    avatarEl.textContent = initials;
   }
 
   set('profName', userProfile.name);
@@ -5943,9 +6024,7 @@ function renderAdmUsers() {
   el.innerHTML = allUsers.length ? allUsers.map(u => {
     const initials = (u.name || 'U').split(' ').map(s => s[0]).join('').slice(0,2).toUpperCase();
     const isBlocked = u.blocked === true;
-    const avatarStyle = u.profilePic
-      ? `<div class="avatar avatar-pic" style="background-image: url('${u.profilePic}');"></div>`
-      : `<div class="avatar">${initials}</div>`;
+    const avatarStyle = `<div class="avatar">${initials}</div>`;
     return `
       <div class="user-row" style="${isBlocked ? 'opacity: 0.6; border-color: var(--red);' : ''}">
         <div onclick="openUserManage('${u.id}')" style="display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; min-width: 0;">
