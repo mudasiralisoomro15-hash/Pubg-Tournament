@@ -464,6 +464,8 @@ input, select, textarea { font-family: inherit; }
   font-size: 130px;
   color: rgba(255,107,26,0.06);
   letter-spacing: -4px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .bc-label {
@@ -472,6 +474,8 @@ input, select, textarea { font-family: inherit; }
   color: var(--text-dim);
   letter-spacing: 2px;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
 }
 
 .bc-amount {
@@ -479,6 +483,8 @@ input, select, textarea { font-family: inherit; }
   font-size: 50px;
   letter-spacing: 1px;
   line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .bc-amount .currency {
@@ -492,27 +498,148 @@ input, select, textarea { font-family: inherit; }
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 18px;
+  position: relative;
+  z-index: 2;
 }
 
-.bc-btn {
+.bc-actions {
+  display: none;
+}
+
+/* === NEW DASHBOARD ACTIONS (outside balance card for guaranteed clicks) === */
+.dash-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.dash-btn {
   background: var(--bg-3);
   border: 1px solid var(--line-bright);
   color: var(--text);
-  padding: 13px;
+  padding: 14px 8px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 16px;
-  letter-spacing: 2px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 5px;
+  border-radius: 6px;
+  cursor: pointer;
   transition: all 0.2s;
-  border-radius: 4px;
+  -webkit-tap-highlight-color: rgba(255,107,26,0.3);
+  user-select: none;
+  touch-action: manipulation;
+  min-height: 64px;
 }
 
-.bc-btn:hover, .bc-btn:active { border-color: var(--orange); color: var(--orange); }
-.bc-btn.deposit { background: var(--orange); color: #000; border-color: var(--orange); }
-.bc-btn.deposit:hover, .bc-btn.deposit:active { background: var(--orange-light); border-color: var(--orange-light); color: #000; }
+.dash-btn:active {
+  transform: scale(0.96);
+}
+
+.dash-btn.deposit-btn {
+  background: var(--orange);
+  color: #000;
+  border-color: var(--orange);
+  box-shadow: 0 4px 12px rgba(255,107,26,0.25);
+}
+
+.dash-btn.deposit-btn:hover, .dash-btn.deposit-btn:active {
+  background: var(--orange-light);
+  border-color: var(--orange-light);
+}
+
+.dash-btn.withdraw-btn {
+  background: var(--bg-3);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.dash-btn.withdraw-btn:hover, .dash-btn.withdraw-btn:active {
+  background: rgba(255,107,26,0.1);
+}
+
+.dash-btn.refresh-btn {
+  background: var(--bg-3);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.dash-btn.refresh-btn:hover, .dash-btn.refresh-btn:active {
+  background: rgba(59,130,246,0.1);
+}
+
+.dash-btn.refreshing {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.dash-btn.refreshing svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.bc-btn {
+  display: none;
+}
+
+/* === PROFILE MONEY ACTIONS (big prominent buttons) === */
+.profile-money-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pma-btn {
+  padding: 16px 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: rgba(255,107,26,0.3);
+  user-select: none;
+  touch-action: manipulation;
+  border: 1px solid var(--line-bright);
+  min-height: 70px;
+}
+
+.pma-btn:active { transform: scale(0.96); }
+
+.pma-btn.deposit {
+  background: var(--green);
+  color: #000;
+  border-color: var(--green);
+  box-shadow: 0 4px 14px rgba(74,222,128,0.25);
+}
+
+.pma-btn.deposit:hover, .pma-btn.deposit:active {
+  background: #5be891;
+}
+
+.pma-btn.withdraw {
+  background: var(--orange);
+  color: #000;
+  border-color: var(--orange);
+  box-shadow: 0 4px 14px rgba(255,107,26,0.25);
+}
+
+.pma-btn.withdraw:hover, .pma-btn.withdraw:active {
+  background: var(--orange-light);
+}
 
 .quick-stats {
   display: grid;
@@ -845,6 +972,8 @@ input, select, textarea { font-family: inherit; }
   font-size: 26px;
   letter-spacing: 2px;
   margin-bottom: 4px;
+  display: block;
+  clear: both;
 }
 
 .profile-id {
@@ -852,6 +981,10 @@ input, select, textarea { font-family: inherit; }
   font-size: 11px;
   color: var(--orange);
   letter-spacing: 1.5px;
+  display: block;
+  clear: both;
+  word-break: break-all;
+  padding: 0 8px;
 }
 
 .profile-stats {
@@ -860,6 +993,7 @@ input, select, textarea { font-family: inherit; }
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
+  clear: both;
 }
 
 .ps-item { text-align: center; border-right: 1px solid var(--line); }
@@ -1718,14 +1852,12 @@ input, select, textarea { font-family: inherit; }
   position: relative;
   width: 80px;
   height: 80px;
-  margin: 0 auto 14px;
+  margin: 0 auto 16px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   flex-shrink: 0;
 }
-.avatar-upload-wrap .avatar {
+.avatar-upload-wrap > .avatar {
   margin: 0 !important;
   width: 80px;
   height: 80px;
@@ -1736,15 +1868,16 @@ input, select, textarea { font-family: inherit; }
 .avatar-pic {
   width: 80px;
   height: 80px;
-  margin: 0 auto 14px;
-  background-size: cover;
-  background-position: center;
+  background: var(--bg-3) center/cover no-repeat !important;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.avatar.avatar-pic {
+  background-color: var(--bg-3) !important;
 }
 .avatar-edit-btn {
   position: absolute;
   bottom: -2px;
-  right: -2px;
+  right: -4px;
   width: 26px;
   height: 26px;
   background: var(--orange);
@@ -2202,10 +2335,17 @@ input, select, textarea { font-family: inherit; }
       <div class="balance-card">
         <div class="bc-label">// AVAILABLE BALANCE</div>
         <div class="bc-amount"><span class="currency">PKR</span><span id="dashBalance">0</span></div>
-        <div class="bc-actions">
-          <button class="bc-btn deposit" type="button" onclick="window.openModal && window.openModal('deposit')">＋ DEPOSIT</button>
-          <button class="bc-btn" type="button" onclick="window.openModal && window.openModal('withdraw')">↗ WITHDRAW</button>
-        </div>
+      </div>
+
+      <div class="dash-actions">
+        <button class="dash-btn deposit-btn" type="button" onclick="window.openModal('deposit')">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px; height:18px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          DEPOSIT
+        </button>
+        <button class="dash-btn refresh-btn" type="button" onclick="refreshAllData()" id="refreshBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px; height:18px;"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          REFRESH
+        </button>
       </div>
 
       <div class="quick-stats">
@@ -2270,23 +2410,30 @@ input, select, textarea { font-family: inherit; }
         <div class="info-row"><span class="info-label">PHONE</span><span class="info-value" id="infoPhone">-</span></div>
       </div>
 
+      <!-- Big prominent action buttons -->
+      <div class="profile-money-actions">
+        <button class="pma-btn deposit" type="button" onclick="window.openModal('deposit')">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px; height:22px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span>ADD MONEY</span>
+        </button>
+        <button class="pma-btn withdraw" type="button" onclick="window.openModal('withdraw')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:22px; height:22px;"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <span>WITHDRAW</span>
+        </button>
+      </div>
+
       <div class="action-list">
-        <div class="action-row" onclick="openModal('editProfile')">
+        <div class="action-row" onclick="window.openModal('editProfile')">
           <div class="action-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></div>
           <div class="action-text">EDIT PROFILE</div>
           <div class="action-arrow">›</div>
         </div>
-        <div class="action-row" onclick="openModal('deposit')">
-          <div class="action-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg></div>
-          <div class="action-text">ADD MONEY</div>
+        <div class="action-row" onclick="window.hardRefresh()">
+          <div class="action-icon" style="color: var(--blue);"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
+          <div class="action-text">RELOAD APP</div>
           <div class="action-arrow">›</div>
         </div>
-        <div class="action-row" onclick="openModal('withdraw')">
-          <div class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-          <div class="action-text">WITHDRAW MONEY</div>
-          <div class="action-arrow">›</div>
-        </div>
-        <div class="action-row" onclick="logout()">
+        <div class="action-row" onclick="window.logout()">
           <div class="action-icon danger"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg></div>
           <div class="action-text">LOGOUT</div>
           <div class="action-arrow">›</div>
@@ -3697,6 +3844,58 @@ window.navTo = function(screen) {
 };
 
 // ============= MODALS =============
+// === REFRESH ALL DATA (manual refresh button) ===
+window.refreshAllData = async function() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) btn.classList.add('refreshing');
+  toast('Refreshing data...', 'info');
+
+  try {
+    // Force refresh by reloading user profile + matches + settings
+    if (currentUser) {
+      const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+      if (userSnap.exists()) {
+        userProfile = userSnap.data();
+        renderHeader();
+        renderDashboard();
+        renderProfile();
+      }
+
+      // Refresh matches
+      const matchesSnap = await getDocs(collection(db, 'matches'));
+      allMatches = matchesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDashboard();
+      renderMatches();
+      if (isAdmin) renderAdmMatches();
+
+      // Refresh settings
+      const settingsSnap = await getDoc(doc(db, 'settings', 'config'));
+      if (settingsSnap.exists()) {
+        const data = settingsSnap.data();
+        paymentSettings = data.payment || { EasyPaisa: '', JazzCash: '', Bank: '' };
+        groupLink = data.groupLink || '';
+        adminEmailList = data.admins || [];
+        renderGroupBanner();
+      }
+    }
+
+    setTimeout(() => {
+      if (btn) btn.classList.remove('refreshing');
+      toast('Refreshed!', 'success');
+    }, 500);
+  } catch (err) {
+    console.error('Refresh error:', err);
+    if (btn) btn.classList.remove('refreshing');
+    toast('Refresh failed: ' + (err.message || 'Try again'), 'error');
+  }
+};
+
+// Hard reload page (full refresh)
+window.hardRefresh = function() {
+  toast('Reloading page...', 'info');
+  setTimeout(() => location.reload(), 300);
+};
+
 window.openModal = function(name) {
   closeAllModals();
   if (name === 'deposit') {
@@ -4768,6 +4967,10 @@ window.uploadProfilePic = async function(input) {
     input.value = '';
     return;
   }
+  if (!currentUser) {
+    toast('Not logged in', 'error');
+    return;
+  }
   toast('Uploading profile picture...', 'info');
   try {
     const path = `profilePics/${currentUser.uid}/${Date.now()}_${file.name}`;
@@ -4777,11 +4980,23 @@ window.uploadProfilePic = async function(input) {
     await updateDoc(doc(db, 'users', currentUser.uid), {
       profilePic: url
     });
+
+    // Manually update local state and re-render immediately
+    if (userProfile) {
+      userProfile.profilePic = url;
+      renderProfile();
+    }
+
     toast('Profile picture updated!', 'success');
     input.value = '';
   } catch (err) {
-    console.error(err);
-    toast('Upload failed: ' + (err.message || 'Try again'), 'error');
+    console.error('Profile pic upload error:', err);
+    if (err.code === 'storage/unauthorized' || (err.message && err.message.includes('unauthorized'))) {
+      toast('Firebase Storage not enabled. Check Storage in Firebase Console.', 'error');
+    } else {
+      toast('Upload failed: ' + (err.message || 'Try again'), 'error');
+    }
+    input.value = '';
   }
 };
 
@@ -5595,14 +5810,16 @@ function renderProfile() {
   const avatarEl = document.getElementById('profAvatar');
   if (avatarEl) {
     if (userProfile.profilePic) {
-      avatarEl.style.backgroundImage = `url('${userProfile.profilePic}')`;
-      avatarEl.style.backgroundSize = 'cover';
-      avatarEl.style.backgroundPosition = 'center';
-      avatarEl.style.color = 'transparent';
+      // Override the gradient background with the image
+      avatarEl.style.setProperty('background', `url('${userProfile.profilePic}') center/cover no-repeat`, 'important');
+      avatarEl.style.setProperty('color', 'transparent', 'important');
+      avatarEl.style.setProperty('font-size', '0', 'important');
       avatarEl.textContent = '';
     } else {
-      avatarEl.style.backgroundImage = '';
-      avatarEl.style.color = '';
+      // Reset to default - remove inline styles so CSS gradient takes over
+      avatarEl.style.removeProperty('background');
+      avatarEl.style.removeProperty('color');
+      avatarEl.style.removeProperty('font-size');
       avatarEl.textContent = initials;
     }
   }
