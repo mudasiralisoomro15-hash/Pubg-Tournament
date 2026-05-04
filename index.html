@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#ff6b1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Battlegrounds PK">
+<meta name="application-name" content="Battlegrounds PK">
+<meta name="description" content="PUBG Mobile Tournament Platform Pakistan - Win real cash prizes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>BATTLEGROUNDS PK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4113,10 +4121,52 @@ window.previewScreenshot = function(input) {
   }
   const reader = new FileReader();
   reader.onload = (e) => {
-    document.getElementById('depPreview').src = e.target.result;
-    document.getElementById('depPreview').style.display = 'block';
-    document.getElementById('depUploadLabel').style.display = 'none';
-    document.getElementById('depScreenshotZone').classList.add('has-file');
+    const preview = document.getElementById('depPreview');
+    const label = document.getElementById('depUploadLabel');
+    const zone = document.getElementById('depScreenshotZone');
+
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    label.style.display = 'none';
+    zone.classList.add('has-file');
+
+    // Add a remove button if not already there
+    let removeBtn = document.getElementById('depRemoveBtn');
+    if (!removeBtn) {
+      removeBtn = document.createElement('button');
+      removeBtn.id = 'depRemoveBtn';
+      removeBtn.type = 'button';
+      removeBtn.textContent = '✕ Remove';
+      removeBtn.style.cssText = `
+        margin-top: 10px;
+        background: var(--bg-3);
+        border: 1px solid var(--red);
+        color: var(--red);
+        padding: 6px 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border-radius: 3px;
+        cursor: pointer;
+      `;
+      removeBtn.onclick = (ev) => {
+        ev.stopPropagation();
+        document.getElementById('depScreenshot').value = '';
+        preview.style.display = 'none';
+        preview.src = '';
+        label.style.display = 'block';
+        zone.classList.remove('has-file');
+        removeBtn.remove();
+      };
+      zone.appendChild(removeBtn);
+    }
+
+    // Show success toast
+    toast(`Screenshot attached (${Math.round(file.size / 1024)} KB)`, 'success');
+  };
+  reader.onerror = () => {
+    toast('Could not read file', 'error');
   };
   reader.readAsDataURL(file);
 };
@@ -4148,23 +4198,50 @@ window.submitDeposit = async function(event) {
 
   try {
     let screenshotUrl = '';
+    let screenshotBase64 = '';
+
     if (file) {
       if (btn) btn.textContent = 'UPLOADING IMAGE...';
+
+      // METHOD 1: Try Firebase Storage upload
+      let storageWorked = false;
       try {
-        const path = `deposits/${currentUser.uid}/${Date.now()}_${file.name}`;
+        const path = `deposits/${currentUser.uid}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
         const ref = storageRef(storage, path);
         const snap = await uploadBytes(ref, file);
         screenshotUrl = await getDownloadURL(snap.ref);
+        storageWorked = true;
+        console.log('[Deposit] Screenshot uploaded to Storage:', screenshotUrl);
       } catch (uploadErr) {
-        console.error('Upload error:', uploadErr);
-        // Continue without screenshot if upload fails
-        toast('Screenshot upload failed but request will still be submitted', 'info');
+        console.warn('[Deposit] Firebase Storage upload failed, falling back to base64:', uploadErr);
+      }
+
+      // METHOD 2: Fallback - compress and store as base64 in Firestore (works without Storage)
+      if (!storageWorked) {
+        if (btn) btn.textContent = 'COMPRESSING IMAGE...';
+        try {
+          screenshotBase64 = await compressImageToBase64(file, 800, 0.7);
+          // Check if size is manageable (Firestore field limit is 1MB)
+          if (screenshotBase64.length > 950000) {
+            // Try smaller
+            screenshotBase64 = await compressImageToBase64(file, 600, 0.5);
+          }
+          if (screenshotBase64.length > 950000) {
+            screenshotBase64 = '';
+            toast('Image too large to attach. Submitting without screenshot.', 'info');
+          } else {
+            console.log('[Deposit] Screenshot encoded as base64, size:', screenshotBase64.length);
+          }
+        } catch (compErr) {
+          console.error('[Deposit] Base64 fallback failed:', compErr);
+          screenshotBase64 = '';
+        }
       }
     }
 
     if (btn) btn.textContent = 'SUBMITTING...';
     const reqId = genId('DEP');
-    await setDoc(doc(db, 'depositRequests', reqId), {
+    const reqData = {
       id: reqId,
       userId: currentUser.uid,
       userName: userProfile.name,
@@ -4174,10 +4251,13 @@ window.submitDeposit = async function(event) {
       txnId: txn,
       sender: sender,
       screenshotUrl: screenshotUrl,
+      screenshotBase64: screenshotBase64,
       status: 'pending',
       createdAt: serverTimestamp(),
       date: new Date().toISOString()
-    });
+    };
+
+    await setDoc(doc(db, 'depositRequests', reqId), reqData);
 
     await setDoc(doc(db, 'users', currentUser.uid, 'transactions', reqId), {
       id: reqId,
@@ -4192,8 +4272,11 @@ window.submitDeposit = async function(event) {
     ['depAmount','depTxn','depSender'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('depScreenshot').value = '';
     document.getElementById('depPreview').style.display = 'none';
+    document.getElementById('depPreview').src = '';
     document.getElementById('depUploadLabel').style.display = 'block';
     document.getElementById('depScreenshotZone').classList.remove('has-file');
+    const rmBtn = document.getElementById('depRemoveBtn');
+    if (rmBtn) rmBtn.remove();
     closeModal('deposit');
     toast('Deposit request submitted! Awaiting admin approval.', 'success');
   } catch (err) {
@@ -4202,6 +4285,45 @@ window.submitDeposit = async function(event) {
     if (btn) { btn.disabled = false; btn.textContent = 'SUBMIT REQUEST ▸'; }
   }
 };
+
+// === Image Compression Helper ===
+// Compresses an image file to a smaller base64 string that fits in Firestore
+function compressImageToBase64(file, maxWidth = 800, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.onload = () => {
+        try {
+          // Calculate new dimensions maintaining aspect ratio
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+
+          // Draw to canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to base64 JPEG (smaller than PNG)
+          const base64 = canvas.toDataURL('image/jpeg', quality);
+          resolve(base64);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 // ============= WITHDRAW FLOW =============
 window.submitWithdraw = async function(event) {
@@ -5096,9 +5218,22 @@ window.uploadProfilePic = async function(input) {
 };
 
 // ============= SCREENSHOT VIEWER =============
-window.viewScreenshot = function(url) {
-  if (!url) return toast('No screenshot available', 'info');
-  document.getElementById('screenshotImg').src = url;
+window.viewScreenshot = function(reqIdOrUrl) {
+  let imgSrc = '';
+
+  // Check if it's a request ID (look up in deposits)
+  if (reqIdOrUrl && reqIdOrUrl.startsWith('DEP')) {
+    const req = allDeposits.find(d => d.id === reqIdOrUrl);
+    if (req) {
+      imgSrc = req.screenshotUrl || req.screenshotBase64 || '';
+    }
+  } else {
+    // Direct URL
+    imgSrc = reqIdOrUrl;
+  }
+
+  if (!imgSrc) return toast('No screenshot available', 'info');
+  document.getElementById('screenshotImg').src = imgSrc;
   document.getElementById('modalScreenshot').classList.add('active');
 };
 
@@ -5932,10 +6067,10 @@ function renderAdmDeposits() {
       <div class="req-detail"><span>METHOD</span><span style="color: var(--text);">${r.method}</span></div>
       <div class="req-detail"><span>TXN ID</span><span style="color: var(--text);">${r.txnId}</span></div>
       <div class="req-detail"><span>SENDER</span><span style="color: var(--text);">${r.sender}</span></div>
-      ${r.screenshotUrl ? `
+      ${(r.screenshotUrl || r.screenshotBase64) ? `
         <div class="req-detail">
           <span>SCREENSHOT</span>
-          <a class="screenshot-preview-link" onclick="viewScreenshot('${r.screenshotUrl}')">📷 VIEW IMAGE</a>
+          <a class="screenshot-preview-link" onclick="viewScreenshot('${r.id}')">📷 VIEW IMAGE</a>
         </div>
       ` : ''}
       <div class="req-detail"><span>STATUS</span><span class="hi-status ${r.status}" style="margin-top:0;">${r.status.toUpperCase()}</span></div>
@@ -6128,6 +6263,79 @@ window.addEventListener('error', (e) => {
     showAuthScreen();
   }
 });
+
+// === PWA: Register Service Worker ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      console.log('[PWA] Service worker registered');
+    }).catch(err => {
+      console.warn('[PWA] SW registration failed:', err);
+    });
+  });
+}
+
+// === PWA: Install prompt ===
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  setTimeout(() => {
+    if (deferredInstallPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
+      showInstallToast();
+    }
+  }, 20000);
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('[PWA] App installed');
+  deferredInstallPrompt = null;
+  toast('App installed successfully!', 'success');
+});
+
+function showInstallToast() {
+  if (!deferredInstallPrompt) return;
+  const lastDismissed = localStorage.getItem('installPromptDismissed');
+  if (lastDismissed && Date.now() - parseInt(lastDismissed) < 7 * 24 * 60 * 60 * 1000) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'installBanner';
+  banner.style.cssText = `
+    position: fixed; bottom: 90px; left: 16px; right: 16px;
+    background: linear-gradient(135deg, #ff6b1a, #ffb300);
+    color: #000; padding: 14px 16px; border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(255,107,26,0.4);
+    z-index: 200; max-width: 460px; margin: 0 auto;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Inter', sans-serif;
+  `;
+  banner.innerHTML = `
+    <div style="font-size: 28px;">📱</div>
+    <div style="flex: 1;">
+      <div style="font-weight: 800; font-size: 14px;">Install Battlegrounds App</div>
+      <div style="font-size: 11px; opacity: 0.85;">Add to home screen for quick access</div>
+    </div>
+    <button id="installNow" style="background: #000; color: #ff6b1a; border: none; padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 12px; cursor: pointer; font-family: inherit;">INSTALL</button>
+    <button id="installLater" style="background: transparent; color: #000; border: none; font-size: 18px; cursor: pointer; padding: 4px;">✕</button>
+  `;
+  document.body.appendChild(banner);
+
+  document.getElementById('installNow').onclick = async () => {
+    if (!deferredInstallPrompt) return;
+    banner.remove();
+    deferredInstallPrompt.prompt();
+    const result = await deferredInstallPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+      toast('Installing app...', 'success');
+    }
+    deferredInstallPrompt = null;
+  };
+
+  document.getElementById('installLater').onclick = () => {
+    banner.remove();
+    localStorage.setItem('installPromptDismissed', Date.now().toString());
+  };
+}
 
 </script>
 
